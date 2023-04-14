@@ -22,7 +22,8 @@
             "ev_target_soc_not_found": "EV Target SOC entity not found.",
             "ev_target_soc_invalid_data": "The Target SOC entity gives invalid data.",
             "charger_control_switch_not_found": "Charger control switch entity not found.",
-            "charger_control_switch_not_switch": "Charger control switch entity is not a switch."
+            "charger_control_switch_not_switch": "Charger control switch entity is not a switch.",
+            "failed_to_connect": "Failed to connect to unit."
         }
     },
     "options": {
@@ -47,7 +48,8 @@
             "ev_target_soc_not_found": "EV Target SOC entity not found.",
             "ev_target_soc_invalid_data": "The Target SOC entity gives invalid data.",
             "charger_control_switch_not_found": "Charger control switch entity not found.",
-            "charger_control_switch_not_switch": "Charger control switch entity is not a switch."
+            "charger_control_switch_not_switch": "Charger control switch entity is not a switch.",
+            "failed_to_connect": "Failed to connect to unit."
         }
     }
 }

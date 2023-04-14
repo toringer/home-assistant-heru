@@ -45,20 +45,16 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         _LOGGER.debug("HeruIqcConfigFlow.async_step_user")
         self._errors = {}
 
-        # Uncomment the next 2 lines if only a single instance of the integration is allowed:
-        # if self._async_current_entries():
-        #    return self.async_abort(reason="single_instance_allowed")
-
         if user_input is None:
             user_input = {}
             # Provide defaults for form
             user_input[CONF_DEVICE_NAME] = "HERU"
-            user_input[CONF_HOST_NAME] = "192.168.0.33"
-            user_input[CONF_HOST_PORT] = 502
+            user_input[CONF_HOST_NAME] = "192.168.0.33"  # TODO Remove
+            user_input[CONF_HOST_PORT] = 502  # TODO Remove
 
         else:
             # process user_input
-            error = FlowValidator.validate_step_user(self.hass, user_input)
+            error = await FlowValidator.validate_step_user(self.hass, user_input)
             if error is not None:
                 self._errors[error[0]] = error[1]
 
@@ -106,7 +102,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
         if user_input is not None:
             # process user_input
-            error = FlowValidator.validate_step_user(self.hass, user_input)
+            error = await FlowValidator.validate_step_user(self.hass, user_input)
             if error is not None:
                 self._errors[error[0]] = error[1]
 

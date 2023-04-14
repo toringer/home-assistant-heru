@@ -22,7 +22,9 @@ from ..const import (
     NAME,
     SWITCH,
 )
-
+from pymodbus.client import (
+    AsyncModbusTcpClient,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,12 +33,17 @@ class FlowValidator:
     """Validator of flows"""
 
     @staticmethod
-    def validate_step_user(
+    async def validate_step_user(
         hass: HomeAssistant, user_input: dict[str, Any]
     ) -> list[str]:
         """Validate step_user"""
 
-        entity_registry: EntityRegistry = async_entity_registry_get(hass)
-        entities = entity_registry.entities
-
-        return None
+        host_name = user_input[CONF_HOST_NAME]
+        host_port = int(user_input[CONF_HOST_PORT])
+        client = AsyncModbusTcpClient(host_name, host_port)
+        await client.connect()
+        if client.connected:
+            await client.close()
+            return None
+        await client.close()
+        return ("base", "failed_to_connect")

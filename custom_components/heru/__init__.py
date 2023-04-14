@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+from custom_components.heru.helpers.general import get_parameter
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
@@ -18,6 +19,8 @@ from pymodbus.client import (
 )
 
 from .const import (
+    CONF_HOST_NAME,
+    CONF_HOST_PORT,
     DOMAIN,
     STARTUP_MESSAGE,
     PLATFORMS,
@@ -36,7 +39,9 @@ async def async_setup(
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
     _LOGGER.debug("async_setup_entry")
-    client = AsyncModbusTcpClient("192.168.0.33", 502)
+    host_name = get_parameter(entry, CONF_HOST_NAME)
+    host_port = int(get_parameter(entry, CONF_HOST_PORT))
+    client = AsyncModbusTcpClient(host_name, host_port)
     await client.connect()
     assert client.connected
     if DOMAIN not in hass.data:
