@@ -10,7 +10,6 @@ from pymodbus.client import (
 from .const import (
     BUTTON,
     DOMAIN,
-    ICON_START,
 )
 
 from .entity import HeruEntity
@@ -47,7 +46,7 @@ class HeruButton(HeruEntity, ButtonEntity):
 class HeruButtonStart(HeruButton):
     """HERU start button class."""
 
-    _attr_icon = ICON_START
+    _attr_icon = "mdi:play-circle-outline"
 
     async def async_press(self) -> None:
         """Press the button."""

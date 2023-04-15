@@ -7,6 +7,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
     SensorEntity,
 )
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
@@ -55,7 +56,6 @@ async def async_setup_entry(
         HeruNumberSensor(
             "Current heating power", 28, True, 0.3921568627, client, entry
         ),
-        HeruTimeSensor(client, entry),
     ]
 
     # now = datetime.now(pytz.timezone("Europe/Oslo"))  # TODO
@@ -194,57 +194,6 @@ class HeruNumberSensor(HeruSensor):
         )
 
 
-class HeruTimeSensor(HeruSensor):
-    """HERU sensor class."""
-
-    # _attr_native_unit_of_measurement = "%"
-    #  _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_device_class = SensorDeviceClass.TIMESTAMP
-
-    _attr_icon = "mdi:clock"
-
-    def __init__(
-        self,
-        client: AsyncModbusTcpClient,
-        entry,
-    ):
-        _LOGGER.debug("HeruTemperatureSensor.__init__()")
-        super().__init__("Time", 9999, client, entry)
-        self._attr_unique_id = ".".join(
-            [entry.entry_id, str(9999), SENSOR]
-        )  # TODO Kan denne flyttes til base?.
-        self._attr_native_value = None
-        self._client = client
-
-    async def async_update(self):
-        """async_update"""
-        year_result = await self._client.read_holding_registers(399, 1, 1)
-        month_result = await self._client.read_holding_registers(400, 1, 1)
-        day_result = await self._client.read_holding_registers(401, 1, 1)
-        hours_result = await self._client.read_holding_registers(402, 1, 1)
-        minutes_result = await self._client.read_holding_registers(403, 1, 1)
-        seconds_result = await self._client.read_holding_registers(404, 1, 1)
-        year = year_result.registers[0]
-        month = month_result.registers[0]
-        day = day_result.registers[0]
-        hours = hours_result.registers[0]
-        minutes = minutes_result.registers[0]
-        seconds = seconds_result.registers[0]
-        _LOGGER.debug(
-            "Time: %s %s %s %s %s %s", year, month, day, hours, minutes, seconds
-        )
-        self._attr_native_value = datetime(
-            year,
-            month,
-            day,
-            hours,
-            minutes,
-            seconds,
-            tzinfo=pytz.timezone("Europe/Oslo"),
-        )
-        # TODO timezone
-
-
 class HeruEnumSensor(HeruSensor):
     """HERU sensor class."""
 
@@ -294,6 +243,7 @@ class HeruAlarmSensor(HeruSensor):
     _attr_state_class = None
     # _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_icon = "mdi:bell"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,

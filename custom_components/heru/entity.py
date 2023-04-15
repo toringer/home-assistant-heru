@@ -2,7 +2,7 @@
 import logging
 from homeassistant.helpers.entity import Entity
 
-from .const import DOMAIN, ICON, NAME, VERSION
+from .const import DOMAIN, NAME, VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -10,7 +10,7 @@ _LOGGER = logging.getLogger(__name__)
 class HeruEntity(Entity):
     """Entity class."""
 
-    _attr_icon = ICON
+    _attr_icon = "mdi:flash"
     _attr_has_entity_name = True
 
     def __init__(self, config_entry):

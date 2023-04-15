@@ -22,7 +22,6 @@ from .const import (
     CONF_HOST_NAME,
     CONF_HOST_PORT,
     DOMAIN,
-    STARTUP_MESSAGE,
     PLATFORMS,
 )
 

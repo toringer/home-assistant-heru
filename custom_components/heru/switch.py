@@ -41,6 +41,8 @@ async def async_setup_entry(
 class HeruSwitch(HeruEntity, SwitchEntity, RestoreEntity):
     """HERU switch class."""
 
+    _attr_icon = "mdi:toggle-switch-variant"
+
     def __init__(self, name: str, address: int, entry, hub: AsyncModbusTcpClient):
         _LOGGER.debug("HeruSwitch.__init__()")
         super().__init__(entry)
