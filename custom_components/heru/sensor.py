@@ -49,6 +49,7 @@ async def async_setup_entry(
         HeruTemperatureSensor("Heat recovery temperature", 6, 0.1, client, entry),
         HeruDaySensor("Filter days left", 19, client, entry),
         HeruEnumSensor("Current supply fan step", ICON_FAN, 22, client, entry),
+        HeruEnumSensor("Current exhaust fan step", ICON_FAN, 23, client, entry),
         HeruAlarmSensor("Fire alarm", 9, client, entry),
         HeruAlarmSensor("Rotor alarm", 10, client, entry),
         HeruAlarmSensor("Supply fan alarm", 20, client, entry),
