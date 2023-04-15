@@ -22,9 +22,11 @@ from pymodbus.client import (
 from .const import (
     DEFAULT_SLAVE,
     DOMAIN,
+    ICON_ALARM,
     ICON_EXCHANGE,
     ICON_FAN,
     ICON_HEAT_WAVE,
+    ICON_SWITCH,
     SENSOR,
 )
 from .entity import HeruEntity
@@ -50,11 +52,33 @@ async def async_setup_entry(
         HeruDaySensor("Filter days left", 19, client, entry),
         HeruEnumSensor("Current supply fan step", ICON_FAN, 22, client, entry),
         HeruEnumSensor("Current exhaust fan step", ICON_FAN, 23, client, entry),
-        HeruAlarmSensor("Fire alarm", 9, client, entry),
-        HeruAlarmSensor("Rotor alarm", 10, client, entry),
-        HeruAlarmSensor("Supply fan alarm", 20, client, entry),
-        HeruAlarmSensor("Exhaust fan alarm", 21, client, entry),
-        HeruAlarmSensor("Filter timer alarm", 24, client, entry),
+        HeruAlarmSensor("Boost input", ICON_SWITCH, None, 1, client, entry),
+        HeruAlarmSensor("Overpressure input", ICON_SWITCH, None, 2, client, entry),
+        HeruAlarmSensor(
+            "Fire alarm", ICON_ALARM, EntityCategory.DIAGNOSTIC, 9, client, entry
+        ),
+        HeruAlarmSensor(
+            "Rotor alarm", ICON_ALARM, EntityCategory.DIAGNOSTIC, 10, client, entry
+        ),
+        HeruAlarmSensor(
+            "Supply fan alarm", ICON_ALARM, EntityCategory.DIAGNOSTIC, 20, client, entry
+        ),
+        HeruAlarmSensor(
+            "Exhaust fan alarm",
+            ICON_ALARM,
+            EntityCategory.DIAGNOSTIC,
+            21,
+            client,
+            entry,
+        ),
+        HeruAlarmSensor(
+            "Filter timer alarm",
+            ICON_ALARM,
+            EntityCategory.DIAGNOSTIC,
+            24,
+            client,
+            entry,
+        ),
         HeruNumberSensor(
             "Current heating power",
             ICON_HEAT_WAVE,
@@ -268,22 +292,24 @@ class HeruAlarmSensor(HeruSensor):
     """HERU sensor class."""
 
     _attr_state_class = None
-    _attr_icon = "mdi:bell"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,
         name: str,
+        icon: str,
+        category: EntityCategory,
         address: int,
         client: AsyncModbusTcpClient,
         entry,
     ):
-        _LOGGER.debug("HeruTemperatureSensor.__init__()")
+        _LOGGER.debug("HeruAlarmSensor.__init__()")
         super().__init__(name, address, client, entry)
         self._attr_unique_id = ".".join(
             [entry.entry_id, "alarm", str(address), SENSOR]
         )  # TODO Kan denne flyttes til base?.
         self._attr_native_value = STATE_OFF
+        self._attr_icon = icon
+        self._attr_entity_category = category
         self._client = client
 
     async def async_update(self):

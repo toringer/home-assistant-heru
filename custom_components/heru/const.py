@@ -11,6 +11,8 @@ VERSION = "0.1.0"
 ICON_FAN = "mdi:fan"
 ICON_HEAT_WAVE = "mdi:heat-wave"
 ICON_EXCHANGE = "mdi:swap-horizontal"
+ICON_ALARM = "mdi:bell"
+ICON_SWITCH = "mdi:electric-switch"
 
 # Platforms
 SENSOR = Platform.SENSOR
