@@ -33,7 +33,7 @@ TODO
 
 ## Configuration
 
-Enable modbus and network on the HERU unit in the service menu using ´1991´ as pin code.
+Enable modbus and network on the HERU unit in the service menu using `1991` as pin code.
 
 
 
