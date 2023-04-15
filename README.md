@@ -3,7 +3,7 @@
 [![Latest release downloads][latest-release-downloads-shield]][latest-release-downloads]
 
 <p align="right">
-<img width="250" alt="Logo" src="assets/logo.png">
+<img width="250" alt="Logo" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/logo.png">
 </p>
 
 # HERU energy recovery unit component for Home Assistant 
@@ -12,7 +12,7 @@
 Control and monitor your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface. 
 
 <p align="center">
-<img width="250" alt="Sensors" src="assets/sensors.png"><img width="250" alt="Controls" src="assets/controls.png"><img width="250" alt="Diagnostic" src="assets/diagnostic.png">
+<img width="250" alt="Sensors" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/sensors.png"><img width="250" alt="Controls" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/controls.png"><img width="250" alt="Diagnostic" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/diagnostic.png">
 </p>
 
 
