@@ -9,6 +9,7 @@ from pymodbus.client import (
 
 from .const import (
     BUTTON,
+    DEFAULT_SLAVE,
     DOMAIN,
 )
 
@@ -51,5 +52,5 @@ class HeruButtonStart(HeruButton):
     async def async_press(self) -> None:
         """Press the button."""
         _LOGGER.debug("HeruButtonStart.async_press()")
-        result = await self._client.write_coil(self._address, True, 1)
+        result = await self._client.write_coil(self._address, True, DEFAULT_SLAVE)
         _LOGGER.debug("async_turn_on: %s", result)

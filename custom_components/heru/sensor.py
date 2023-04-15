@@ -20,7 +20,11 @@ from pymodbus.client import (
 )
 
 from .const import (
+    DEFAULT_SLAVE,
     DOMAIN,
+    ICON_EXCHANGE,
+    ICON_FAN,
+    ICON_HEAT_WAVE,
     SENSOR,
 )
 from .entity import HeruEntity
@@ -38,35 +42,54 @@ async def async_setup_entry(
 
     # Address input = Spec. address - 1
     sensors = [
-        HeruTemperatureSensor("Outdoor temperature", 1, True, 0.1, client, entry),
-        HeruTemperatureSensor("Supply air temperature", 2, True, 0.1, client, entry),
-        HeruTemperatureSensor("Extract air temperature", 3, True, 0.1, client, entry),
-        HeruTemperatureSensor("Exhaust air temperature", 4, True, 0.1, client, entry),
-        HeruTemperatureSensor("Water temperature", 5, False, 1, client, entry),
-        HeruTemperatureSensor("Heat recovery temperature", 6, True, 0.1, client, entry),
-        HeruTemperatureSensor("Room temperature", 7, False, 1, client, entry),
-        HeruTemperatureSensor(
-            "Supply pressure - duct (GP1)", 11, False, 10, client, entry
-        ),
-        HeruDaySensor("Filter days left", 19, False, client, entry),
-        HeruEnumSensor("Current supply fan step", 22, False, client, entry),
-        HeruAlarmSensor("Fire alarm", 9, True, client, entry),
-        HeruAlarmSensor("Rotor alarm", 10, True, client, entry),
-        HeruAlarmSensor("Filter timer alarm", 24, True, client, entry),
+        HeruTemperatureSensor("Outdoor temperature", 1, 0.1, client, entry),
+        HeruTemperatureSensor("Supply air temperature", 2, 0.1, client, entry),
+        HeruTemperatureSensor("Extract air temperature", 3, 0.1, client, entry),
+        HeruTemperatureSensor("Exhaust air temperature", 4, 0.1, client, entry),
+        HeruTemperatureSensor("Heat recovery temperature", 6, 0.1, client, entry),
+        HeruDaySensor("Filter days left", 19, client, entry),
+        HeruEnumSensor("Current supply fan step", ICON_FAN, 22, client, entry),
+        HeruAlarmSensor("Fire alarm", 9, client, entry),
+        HeruAlarmSensor("Rotor alarm", 10, client, entry),
+        HeruAlarmSensor("Supply fan alarm", 20, client, entry),
+        HeruAlarmSensor("Exhaust fan alarm", 21, client, entry),
+        HeruAlarmSensor("Filter timer alarm", 24, client, entry),
         HeruNumberSensor(
-            "Current heating power", 28, True, 0.3921568627, client, entry
+            "Current heating power",
+            ICON_HEAT_WAVE,
+            28,
+            0.3921568627,
+            client,
+            entry,
         ),
+        HeruNumberSensor(
+            "Current supply fan power",
+            ICON_FAN,
+            24,
+            1,
+            client,
+            entry,
+        ),
+        HeruNumberSensor(
+            "Current heat/cold recovery power",
+            ICON_EXCHANGE,
+            29,
+            0.3921568627,
+            client,
+            entry,
+        ),
+        HeruNumberSensor("Current exhaust fan power", ICON_FAN, 25, 1, client, entry),
     ]
 
     # now = datetime.now(pytz.timezone("Europe/Oslo"))  # TODO
-    # # await client.write_coil(399, now.year, 1)
-    # # await client.write_coil(400, now.month, 1)
-    # # await client.write_coil(401, now.day, 1)
-    # # await client.write_coil(402, now.hour, 1)
-    # await client.write_coil(403, now.minute, 1)
-    # # await client.write_coil(404, now.second, 1)
+    # # await client.write_coil(399, now.year, DEFAULT_SLAVE)
+    # # await client.write_coil(400, now.month, DEFAULT_SLAVE)
+    # # await client.write_coil(401, now.day, DEFAULT_SLAVE)
+    # # await client.write_coil(402, now.hour, DEFAULT_SLAVE)
+    # await client.write_coil(403, now.minute, DEFAULT_SLAVE)
+    # # await client.write_coil(404, now.second, DEFAULT_SLAVE)
     # _LOGGER.debug("Now: %s", str(now.minute))
-    # # await self._client.write_coil(self._address, True, 1)
+    # # await self._client.write_coil(self._address, True, DEFAULT_SLAVE)
 
     async_add_devices(sensors, update_before_add=True)
 
@@ -96,7 +119,6 @@ class HeruTemperatureSensor(HeruSensor):
         self,
         name: str,
         address: int,
-        enabled: bool,
         scale: float,
         client: AsyncModbusTcpClient,
         entry,
@@ -109,11 +131,12 @@ class HeruTemperatureSensor(HeruSensor):
         )  # TODO Kan denne flyttes til base?.
         self._attr_native_value = 0
         self._client = client
-        self._attr_entity_registry_enabled_default = True  # TODO enabled
 
     async def async_update(self):
         """async_update"""
-        result = await self._client.read_input_registers(self._address, 1, 1)
+        result = await self._client.read_input_registers(
+            self._address, 1, DEFAULT_SLAVE
+        )
         self._attr_native_value = result.registers[0] * self._scale
         _LOGGER.debug(
             "%s: %s %s",
@@ -133,7 +156,6 @@ class HeruDaySensor(HeruSensor):
         self,
         name: str,
         address: int,
-        enabled: bool,
         client: AsyncModbusTcpClient,
         entry,
     ):
@@ -144,11 +166,12 @@ class HeruDaySensor(HeruSensor):
         )  # TODO Kan denne flyttes til base?.
         self._attr_native_value = 0
         self._client = client
-        self._attr_entity_registry_enabled_default = True  # TODO enabled
 
     async def async_update(self):
         """async_update"""
-        result = await self._client.read_input_registers(self._address, 1, 1)
+        result = await self._client.read_input_registers(
+            self._address, 1, DEFAULT_SLAVE
+        )
         self._attr_native_value = result.registers[0]
         _LOGGER.debug(
             "%s: %s %s",
@@ -162,13 +185,12 @@ class HeruNumberSensor(HeruSensor):
     """HERU sensor class."""
 
     _attr_native_unit_of_measurement = "%"
-    _attr_icon = "mdi:heat-wave"
 
     def __init__(
         self,
         name: str,
+        icon: str,
         address: int,
-        enabled: bool,
         scale: float,
         client: AsyncModbusTcpClient,
         entry,
@@ -181,12 +203,16 @@ class HeruNumberSensor(HeruSensor):
         self._attr_native_value = 0
         self._client = client
         self._scale = scale
-        self._attr_entity_registry_enabled_default = True  # TODO enabled
+        self._attr_icon = icon
 
     async def async_update(self):
         """async_update"""
-        result = await self._client.read_input_registers(self._address, 1, 1)
-        self._attr_native_value = round(result.registers[0] * self._scale, 1)
+        result = await self._client.read_input_registers(
+            self._address, 1, DEFAULT_SLAVE
+        )
+        self._attr_native_value = round(
+            result.registers[0] * self._scale, DEFAULT_SLAVE
+        )
         _LOGGER.debug(
             "%s: %s",
             self._attr_name,
@@ -198,13 +224,12 @@ class HeruEnumSensor(HeruSensor):
     """HERU sensor class."""
 
     _attr_device_class = SensorDeviceClass.ENUM
-    _attr_icon = "mdi:thermometer"
 
     def __init__(
         self,
         name: str,
+        icon: str,
         address: int,
-        enabled: bool,
         client: AsyncModbusTcpClient,
         entry,
     ):
@@ -215,12 +240,14 @@ class HeruEnumSensor(HeruSensor):
         )  # TODO Kan denne flyttes til base?.
         self._attr_native_value = 0
         self._client = client
-        self._attr_entity_registry_enabled_default = True  # TODO enabled
+        self._attr_icon = icon
         self._attr_options = ["Off", "Minimum", "Standard", "Maximum"]
 
     async def async_update(self):
         """async_update"""
-        result = await self._client.read_input_registers(self._address, 1, 1)
+        result = await self._client.read_input_registers(
+            self._address, 1, DEFAULT_SLAVE
+        )
         if result.registers[0] == 0:
             self._attr_native_value = "Off"
         elif result.registers[0] == 1:
@@ -239,9 +266,7 @@ class HeruEnumSensor(HeruSensor):
 class HeruAlarmSensor(HeruSensor):
     """HERU sensor class."""
 
-    # _attr_native_unit_of_measurement = "°C"
     _attr_state_class = None
-    # _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_icon = "mdi:bell"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
@@ -249,23 +274,22 @@ class HeruAlarmSensor(HeruSensor):
         self,
         name: str,
         address: int,
-        enabled: bool,
         client: AsyncModbusTcpClient,
         entry,
     ):
         _LOGGER.debug("HeruTemperatureSensor.__init__()")
         super().__init__(name, address, client, entry)
         self._attr_unique_id = ".".join(
-            [entry.entry_id, str(address), SENSOR]
+            [entry.entry_id, "alarm", str(address), SENSOR]
         )  # TODO Kan denne flyttes til base?.
         self._attr_native_value = STATE_OFF
-
         self._client = client
-        self._attr_entity_registry_enabled_default = True  # TODO enabled
 
     async def async_update(self):
         """async_update"""
-        result = await self._client.read_discrete_inputs(self._address, 1, 1)
+        result = await self._client.read_discrete_inputs(
+            self._address, 1, DEFAULT_SLAVE
+        )
         if result.bits[0] is False:
             self._attr_native_value = STATE_OFF
         else:
