@@ -1,6 +1,6 @@
 """Sensor platform for HERU."""
 import logging
-
+import datetime
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -13,8 +13,6 @@ from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from datetime import datetime
-import pytz
 from pymodbus.client import (
     AsyncModbusTcpClient,
 )
@@ -32,6 +30,7 @@ from .const import (
 from .entity import HeruEntity
 
 _LOGGER = logging.getLogger(__name__)
+SCAN_INTERVAL = datetime.timedelta(seconds=15)
 
 
 async def async_setup_entry(

@@ -1,7 +1,8 @@
 """Support for Generic Modbus Thermostats."""
 import logging
+import datetime
 
-from typing import Any, cast
+from typing import Any
 
 from homeassistant.components.climate import (
     ClimateEntity,
@@ -29,6 +30,7 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+SCAN_INTERVAL = datetime.timedelta(seconds=15)
 
 
 async def async_setup_entry(
@@ -100,7 +102,7 @@ class HeruThermostat(ClimateEntity):
             target_temperature,
         )
         await self._client.write_register(1, target_temperature, DEFAULT_SLAVE)
-        await self.async_update()  # TODO hvor gjøres dette?
+        await self.async_update()
 
     async def async_update(self) -> None:
         """Update Target & Current Temperature."""

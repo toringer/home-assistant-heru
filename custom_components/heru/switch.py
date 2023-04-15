@@ -1,10 +1,10 @@
 """Switch platform for HERU."""
 import logging
 from typing import Any
+import datetime
 
 from homeassistant.components.switch import SwitchEntity
-from homeassistant.const import STATE_ON
-from homeassistant.core import HomeAssistant, State
+from homeassistant.core import HomeAssistant
 from pymodbus.client import (
     AsyncModbusTcpClient,
 )
@@ -18,6 +18,7 @@ from .const import (
 from .entity import HeruEntity
 
 _LOGGER = logging.getLogger(__name__)
+SCAN_INTERVAL = datetime.timedelta(seconds=15)
 
 
 async def async_setup_entry(
@@ -28,7 +29,6 @@ async def async_setup_entry(
     client = hass.data[DOMAIN]["client"]
 
     switches = [
-        # HeruSwitchActive("Unit on", 0, entry, client), # TODO Bruke HVAC Mode...?
         HeruSwitchActive("Overpressure mode", 1, entry, client),
         HeruSwitchActive("Boost mode", 2, entry, client),
         HeruSwitchActive("Away mode", 3, entry, client),
@@ -67,8 +67,6 @@ class HeruSwitchActive(HeruSwitch):
         self._skip_next_update = True
         result = await self._client.write_coil(self._address, True, DEFAULT_SLAVE)
         _LOGGER.debug("async_turn_on: %s", result)
-        # TODO valider modbus først
-        # Hvis det kommer en update hvor HERU enda ikke rapporterer på så vil switch toggles av. Kanskje en liten hold her?
         self._attr_is_on = True
 
     async def async_turn_off(self, **kwargs: Any) -> None:
@@ -77,7 +75,6 @@ class HeruSwitchActive(HeruSwitch):
         self._skip_next_update = True
         result = await self._client.write_coil(self._address, False, DEFAULT_SLAVE)
         _LOGGER.debug("async_turn_off: %s", result)
-        # TODO valider modbus først
         self._attr_is_on = False
 
     async def async_update(self):
