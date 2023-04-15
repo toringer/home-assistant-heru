@@ -2,19 +2,22 @@
 [![Total downloads][total-downloads-shield]][total-downloads]
 [![Latest release downloads][latest-release-downloads-shield]][latest-release-downloads]
 
-
+<p align="right">
+<img width="250" alt="Logo" src="assets/logo.png">
+</p>
 
 # HERU energy recovery unit component for Home Assistant 
 
-![Icon](assets/logo.png)
 
-Control your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface. 
+Control and monitor your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface. 
 
-## Requirements
-TODO
+<p align="center">
+<img width="250" alt="Sensors" src="assets/sensors.png"><img width="250" alt="Controls" src="assets/controls.png"><img width="250" alt="Diagnostic" src="assets/diagnostic.png">
+</p>
 
-## Features
-TODO
+
+*Note: The integrations requires HERU IQC firmware version 1.09i or newer. Version 1.09i introduced one decimal to temperature sensors, and therefore needs to be scaled.*
+
 
 ## Installation
 
@@ -27,23 +30,11 @@ TODO
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=heru)
 
-### Manual
 
-TODO
-
-## Configuration
+## Configuration HERU unit
 
 Enable modbus and network on the HERU unit in the service menu using `1991` as pin code.
 
-
-
-### Configuration entities
-
-TODO
-
-## Entities
-
-TODO
 
 
 [releases-shield]: https://img.shields.io/github/v/release/toringer/home-assistant-heru?style=flat-square
