@@ -47,11 +47,6 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is None:
             user_input = {}
-            # Provide defaults for form
-            user_input[CONF_DEVICE_NAME] = "HERU"
-            user_input[CONF_HOST_NAME] = "192.168.0.33"  # TODO Remove
-            user_input[CONF_HOST_PORT] = 502  # TODO Remove
-
         else:
             # process user_input
             error = await FlowValidator.validate_step_user(self.hass, user_input)
@@ -70,13 +65,9 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Show the configuration form."""
 
         user_schema = {
-            vol.Required(
-                CONF_DEVICE_NAME, default=user_input[CONF_DEVICE_NAME]
-            ): cv.string,
-            vol.Required(CONF_HOST_NAME, default=user_input[CONF_HOST_NAME]): cv.string,
-            vol.Required(
-                CONF_HOST_PORT, default=user_input[CONF_HOST_PORT]
-            ): cv.positive_int,
+            vol.Required(CONF_DEVICE_NAME): cv.string,
+            vol.Required(CONF_HOST_NAME): cv.string,
+            vol.Required(CONF_HOST_PORT): cv.positive_int,
         }
 
         return self.async_show_form(
@@ -99,7 +90,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         """Manage the options."""
 
         self._errors = {}
-
         if user_input is not None:
             # process user_input
             error = await FlowValidator.validate_step_user(self.hass, user_input)
