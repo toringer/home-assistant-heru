@@ -26,6 +26,8 @@ PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE]
 
 # Modbus
 DEFAULT_SLAVE = 1
+REGISTER_HOLDING = "holding"
+REGISTER_COILS = "coils"
 
 # Configuration and options
 CONF_HOST_NAME = "host_name"
