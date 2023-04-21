@@ -105,16 +105,6 @@ async def async_setup_entry(
         HeruNumberSensor("Current exhaust fan power", ICON_FAN, 25, 1, client, entry),
     ]
 
-    # now = datetime.now(pytz.timezone("Europe/Oslo"))  # TODO
-    # # await client.write_coil(399, now.year, DEFAULT_SLAVE)
-    # # await client.write_coil(400, now.month, DEFAULT_SLAVE)
-    # # await client.write_coil(401, now.day, DEFAULT_SLAVE)
-    # # await client.write_coil(402, now.hour, DEFAULT_SLAVE)
-    # await client.write_coil(403, now.minute, DEFAULT_SLAVE)
-    # # await client.write_coil(404, now.second, DEFAULT_SLAVE)
-    # _LOGGER.debug("Now: %s", str(now.minute))
-    # # await self._client.write_coil(self._address, True, DEFAULT_SLAVE)
-
     async_add_devices(sensors, update_before_add=True)
 
 
