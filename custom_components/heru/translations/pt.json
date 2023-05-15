@@ -1,0 +1,31 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "Configuração da unidade de nome.",
+                "data": {
+                    "device_name": "Nome",
+                    "host_name": "Nome do host ou endereço de ip",
+                    "host_port": "Número de Porta"
+                }
+            }
+        },
+        "error": {
+            "failed_to_connect": "Falha na ligação a unidade."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "description": "Configuração da Unidade.",
+                "data": {
+                    "host_name": "Nome do host ou endereço de ip",
+                    "host_port": "Número de Porta"
+                }
+            }
+        },
+        "error": {
+            "failed_to_connect": "Falha na ligação a unidade."
+        }
+    }
+}
