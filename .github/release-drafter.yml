@@ -24,7 +24,7 @@ change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 
 template: |
-  [![Downloads for this release](https://img.shields.io/github/downloads/home-assistant-heru/v$RESOLVED_VERSION/total.svg?style=flat-square)](https://github.com/toringer/home-assistant-heru/releases/v$RESOLVED_VERSION)
+  [![Downloads for this release](https://img.shields.io/github/downloads/toringer/home-assistant-heru/v$RESOLVED_VERSION/total.svg?style=flat-square)](https://github.com/toringer/home-assistant-heru/releases/v$RESOLVED_VERSION)
 
   ## Changes
   $CHANGES
