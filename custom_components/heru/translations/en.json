@@ -5,6 +5,7 @@
                 "description": "Configuration of name and unit.",
                 "data": {
                     "device_name": "Name",
+                    "device_model": "Unit model",
                     "host_name": "Host name or IP address",
                     "host_port": "Port number"
                 }
@@ -20,7 +21,8 @@
                 "description": "Configuration of unit.",
                 "data": {
                     "host_name": "Host name or IP address",
-                    "host_port": "Port number"
+                    "host_port": "Port number",
+                    "device_model": "Unit model"
                 }
             }
         },

@@ -33,3 +33,16 @@ REGISTER_COILS = "coils"
 CONF_HOST_NAME = "host_name"
 CONF_HOST_PORT = "host_port"
 CONF_DEVICE_NAME = "device_name"
+CONF_DEVICE_MODEL = "device_model"
+
+
+DEVICE_MODELS = [
+    {"value": "heru_100s_ec", "label": "Heru 100S EC"},
+    {"value": "heru_160s_ec", "label": "Heru 160S EC"},
+    {"value": "heru_200s_ec", "label": "Heru 200S EC"},
+    {"value": "heru_300s_ec", "label": "Heru 300S EC"},
+    {"value": "heru_100t_ec", "label": "Heru 100T EC"},
+    {"value": "heru_160t_ec", "label": "Heru 160T EC"},
+    {"value": "heru_200t_ec", "label": "Heru 200T EC"},
+    {"value": "heru_300t_ec", "label": "Heru 300T EC"},
+]
