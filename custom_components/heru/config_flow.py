@@ -7,7 +7,6 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.core import callback
-from homeassistant.helpers.selector import selector
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
 
@@ -15,9 +14,7 @@ from .const import (
     CONF_HOST_NAME,
     CONF_HOST_PORT,
     CONF_DEVICE_NAME,
-    CONF_DEVICE_MODEL,
     DOMAIN,
-    DEVICE_MODELS,
 )
 
 
@@ -69,18 +66,8 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         user_schema = {
             vol.Required(CONF_DEVICE_NAME): cv.string,
-            vol.Required(
-                CONF_DEVICE_MODEL, default=DEVICE_MODELS[0]["value"]
-            ): selector(
-                {
-                    "select": {
-                        "options": DEVICE_MODELS,
-                        "mode": "dropdown",
-                    }
-                }
-            ),
             vol.Required(CONF_HOST_NAME): cv.string,
-            vol.Required(CONF_HOST_PORT, default=502): cv.port,
+            vol.Required(CONF_HOST_PORT): cv.positive_int,
         }
 
         return self.async_show_form(
@@ -116,22 +103,11 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
         user_schema = {
             vol.Required(
-                CONF_DEVICE_MODEL,
-                default=get_parameter(self.config_entry, CONF_DEVICE_MODEL),
-            ): selector(
-                {
-                    "select": {
-                        "options": DEVICE_MODELS,
-                        "mode": "dropdown",
-                    }
-                }
-            ),
-            vol.Required(
                 CONF_HOST_NAME, default=get_parameter(self.config_entry, CONF_HOST_NAME)
             ): cv.string,
             vol.Required(
                 CONF_HOST_PORT, default=get_parameter(self.config_entry, CONF_HOST_PORT)
-            ): cv.port,
+            ): cv.positive_int,
         }
 
         return self.async_show_form(
