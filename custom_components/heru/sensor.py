@@ -25,8 +25,10 @@ from .const import (
     ICON_FAN,
     ICON_HEAT_WAVE,
     ICON_SWITCH,
+    ICON_ENERGY,
     SENSOR,
 )
+
 from .entity import HeruEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -103,9 +105,22 @@ async def async_setup_entry(
             entry,
         ),
         HeruNumberSensor("Current exhaust fan power", ICON_FAN, 25, 1, client, entry),
+        HeruEnergySensor("Energy consumption", entry),
     ]
 
     async_add_devices(sensors, update_before_add=True)
+
+
+class HeruEnergySensor(HeruEntity, SensorEntity):
+    """Heru Energy Sensor class."""
+
+    def __init__(self, name: str, entry):
+        _LOGGER.debug("HeruSensor.__init__()")
+        super().__init__(entry)
+        id_name = name.replace(" ", "").lower()
+        self._attr_unique_id = ".".join([entry.entry_id, SENSOR, id_name])
+        self._attr_name = name
+        self._attr_icon = ICON_ENERGY
 
 
 class HeruSensor(HeruEntity, SensorEntity):

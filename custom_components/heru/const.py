@@ -13,6 +13,7 @@ ICON_HEAT_WAVE = "mdi:heat-wave"
 ICON_EXCHANGE = "mdi:swap-horizontal"
 ICON_ALARM = "mdi:bell"
 ICON_SWITCH = "mdi:electric-switch"
+ICON_ENERGY = "mdi:lightning-bolt"
 
 # Platforms
 SENSOR = Platform.SENSOR
