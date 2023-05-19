@@ -1,17 +1,20 @@
 """Sensor platform for HERU."""
 import logging
 import datetime
+from decimal import Decimal
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorStateClass,
     SensorEntity,
+    RestoreSensor,
 )
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+import homeassistant.util.dt as dt_util
 
 from pymodbus.client import (
     AsyncModbusTcpClient,
@@ -20,6 +23,9 @@ from pymodbus.client import (
 from .const import (
     DEFAULT_SLAVE,
     DOMAIN,
+    CONF_DEVICE_NAME,
+    CONF_DEVICE_MODEL,
+    DEVICE_CONSUMPTION,
     ICON_ALARM,
     ICON_EXCHANGE,
     ICON_FAN,
@@ -105,22 +111,120 @@ async def async_setup_entry(
             entry,
         ),
         HeruNumberSensor("Current exhaust fan power", ICON_FAN, 25, 1, client, entry),
+        HeruPowerSensor("Instantaneous power", entry),
         HeruEnergySensor("Energy consumption", entry),
     ]
 
     async_add_devices(sensors, update_before_add=True)
 
 
-class HeruEnergySensor(HeruEntity, SensorEntity):
-    """Heru Energy Sensor class."""
+class HeruPowerSensor(HeruEntity, SensorEntity):
+    """Heru Power Sensor class."""
+
+    _attr_native_unit_of_measurement = "W"
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_device_class = SensorDeviceClass.POWER
 
     def __init__(self, name: str, entry):
-        _LOGGER.debug("HeruSensor.__init__()")
+        _LOGGER.debug("HeruPowerSensor.__init__()")
         super().__init__(entry)
         id_name = name.replace(" ", "").lower()
         self._attr_unique_id = ".".join([entry.entry_id, SENSOR, id_name])
         self._attr_name = name
         self._attr_icon = ICON_ENERGY
+        self._device_name = entry.data[CONF_DEVICE_NAME]
+        self._device_model = entry.data[CONF_DEVICE_MODEL]
+        self._heater_p_entity = (
+            "sensor." + self._device_name.lower() + "_current_heating_power"
+        )
+        self._supply_p_entity = (
+            "sensor." + self._device_name.lower() + "_current_supply_fan_power"
+        )
+        self._exhaust_p_entity = (
+            "sensor." + self._device_name.lower() + "_current_exhaust_fan_power"
+        )
+        self._state = None
+
+    async def async_update(self):
+        """async_update"""
+
+        if all(
+            entity in self.hass.states._states.keys()
+            for entity in [
+                self._heater_p_entity,
+                self._supply_p_entity,
+                self._exhaust_p_entity,
+            ]
+        ):
+            heater_p = float(self.hass.states.get(self._heater_p_entity).state)
+            supply_p = float(self.hass.states.get(self._supply_p_entity).state)
+            exhaust_p = float(self.hass.states.get(self._exhaust_p_entity).state)
+            self._attr_native_value = (
+                DEVICE_CONSUMPTION[self._device_model]["heater_p"] * heater_p / 100
+                + DEVICE_CONSUMPTION[self._device_model]["fans_p"] / 2 * supply_p / 100
+                + DEVICE_CONSUMPTION[self._device_model]["fans_p"] / 2 * exhaust_p / 100
+                + DEVICE_CONSUMPTION[self._device_model]["board_p"]
+            )
+            _LOGGER.debug(
+                "%s: %s %s",
+                self._attr_name,
+                self._attr_native_value,
+                self._attr_native_unit_of_measurement,
+            )
+
+
+class HeruEnergySensor(HeruEntity, RestoreSensor):
+    """Heru Power Sensor class."""
+
+    _attr_native_unit_of_measurement = "Wh"
+    _attr_state_class = SensorStateClass.TOTAL
+    _attr_device_class = SensorDeviceClass.ENERGY
+
+    def __init__(self, name: str, entry):
+        _LOGGER.debug("HeruPowerSensor.__init__()")
+        super().__init__(entry)
+        id_name = name.replace(" ", "").lower()
+        self._attr_unique_id = ".".join([entry.entry_id, SENSOR, id_name])
+        self._attr_name = name
+        self._attr_icon = ICON_ENERGY
+        self._device_name = entry.data[CONF_DEVICE_NAME]
+        self._device_model = entry.data[CONF_DEVICE_MODEL]
+        self._power_entity = (
+            "sensor." + self._device_name.lower() + "_instantaneous_power"
+        )
+        self.entity_id = "sensor." + self._device_name.lower() + "_energy_consumption"
+        self._state = None
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        if (last_sensor_data := await self.async_get_last_sensor_data()) is not None:
+            # new introduced in 2022.04
+            if last_sensor_data.native_value is None:
+                self._state = 0
+            else:
+                self._state = last_sensor_data.native_value
+
+    async def async_update(self):
+        """async_update"""
+
+        if all(
+            entity in self.hass.states._states.keys()
+            for entity in [self._power_entity, self.entity_id]
+        ):
+            if self.hass.states.get(self._power_entity).state != "unknown":
+                self._state = (
+                    float(self.hass.states.get(self._power_entity).state)
+                    * SCAN_INTERVAL.total_seconds()
+                    / 3600
+                    + self._state
+                )
+            self._attr_native_value = self._state
+        _LOGGER.debug(
+            "%s: %s %s",
+            self._attr_name,
+            self._attr_native_value,
+            self._attr_native_unit_of_measurement,
+        )
 
 
 class HeruSensor(HeruEntity, SensorEntity):

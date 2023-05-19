@@ -47,3 +47,14 @@ DEVICE_MODELS = [
     {"value": "heru_200t_ec", "label": "Heru 200T EC"},
     {"value": "heru_300t_ec", "label": "Heru 300T EC"},
 ]
+
+DEVICE_CONSUMPTION = {
+    "heru_100s_ec": {"fans_p": 200, "heater_p": 1200, "board_p": 20},
+    "heru_160s_ec": {"fans_p": 301, "heater_p": 1700, "board_p": 19},
+    "heru_200s_ec": {"fans_p": 303, "heater_p": 2300, "board_p": 17},
+    "heru_300s_ec": {"fans_p": 573, "heater_p": 2300, "board_p": 19},
+    "heru_100t_ec": {"fans_p": 198, "heater_p": 1200, "board_p": 12},
+    "heru_160t_ec": {"fans_p": 300, "heater_p": 1700, "board_p": 20},
+    "heru_200t_ec": {"fans_p": 303, "heater_p": 2300, "board_p": 17},
+    "heru_300t_ec": {"fans_p": 563, "heater_p": 2300, "board_p": 17},
+}

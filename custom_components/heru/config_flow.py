@@ -116,17 +116,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
         user_schema = {
             vol.Required(
-                CONF_DEVICE_MODEL,
-                default=get_parameter(self.config_entry, CONF_DEVICE_MODEL),
-            ): selector(
-                {
-                    "select": {
-                        "options": DEVICE_MODELS,
-                        "mode": "dropdown",
-                    }
-                }
-            ),
-            vol.Required(
                 CONF_HOST_NAME, default=get_parameter(self.config_entry, CONF_HOST_NAME)
             ): cv.string,
             vol.Required(
