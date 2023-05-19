@@ -14,6 +14,8 @@ from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from homeassistant.helpers.event import async_track_state_change_event
+
 from pymodbus.client import (
     AsyncModbusTcpClient,
 )
@@ -142,6 +144,16 @@ class HeruPowerSensor(HeruEntity, SensorEntity):
             "sensor." + self._device_name.lower() + "_current_exhaust_fan_power"
         )
         self._state = None
+        self._attr_should_poll = False  # Disable polling
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+
+        async_track_state_change_event(
+            self.hass,
+            [self._heater_p_entity, self._supply_p_entity, self._exhaust_p_entity],
+            self.schedule_update_ha_state,
+        )
 
     async def async_update(self):
         """async_update"""
