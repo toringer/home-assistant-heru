@@ -1,7 +1,6 @@
 """Sensor platform for HERU."""
 import logging
 import datetime
-from decimal import Decimal
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -14,7 +13,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-import homeassistant.util.dt as dt_util
 
 from pymodbus.client import (
     AsyncModbusTcpClient,
