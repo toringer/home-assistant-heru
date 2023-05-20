@@ -10,8 +10,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.const import STATE_OFF
-from homeassistant.const import STATE_ON
+from homeassistant.const import STATE_ON, STATE_OFF, STATE_UNAVAILABLE
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from homeassistant.helpers.event import async_track_state_change_event
@@ -133,6 +132,10 @@ class HeruPowerSensor(HeruEntity, SensorEntity):
         self._attr_name = name
         self._attr_icon = ICON_ENERGY
         self._device_name = entry.data[CONF_DEVICE_NAME]
+        self._attr_should_poll = False  # Disable polling
+        if entry.data[CONF_DEVICE_MODEL] is None:
+            self._state = STATE_UNAVAILABLE
+            return
         self._device_model = entry.data[CONF_DEVICE_MODEL]
         self._heater_p_entity = (
             "sensor." + self._device_name.lower() + "_current_heating_power"
@@ -144,7 +147,6 @@ class HeruPowerSensor(HeruEntity, SensorEntity):
             "sensor." + self._device_name.lower() + "_current_exhaust_fan_power"
         )
         self._state = None
-        self._attr_should_poll = False  # Disable polling
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
