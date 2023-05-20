@@ -112,7 +112,7 @@ async def async_setup_entry(
     ]
 
     # If device model not selected, do not add those sensors
-    if entry.data["device_model"] is not None:
+    if entry.options[CONF_DEVICE_MODEL] is not None:
         sensors.extend(
             [
                 HeruPowerSensor("Instantaneous power", entry),
@@ -137,7 +137,7 @@ class HeruPowerSensor(HeruEntity, SensorEntity):
         self._attr_name = name
         self._attr_icon = ICON_ENERGY
         self._device_name = entry.data[CONF_DEVICE_NAME]
-        self._device_model = entry.data[CONF_DEVICE_MODEL]
+        self._device_model = entry.options[CONF_DEVICE_MODEL]
         self._heater_p_entity = (
             "sensor." + self._device_name.lower() + "_current_heating_power"
         )
