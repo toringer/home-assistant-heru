@@ -6,10 +6,7 @@ from homeassistant.core import HomeAssistant
 
 
 # pylint: disable=relative-beyond-top-level
-from ..const import (
-    CONF_HOST_PORT,
-    CONF_HOST_NAME,
-)
+from ..const import CONF_HOST_PORT, CONF_HOST_NAME
 from pymodbus.client import (
     AsyncModbusTcpClient,
 )

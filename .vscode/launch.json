@@ -9,6 +9,7 @@
       "request": "attach",
       "port": 5678,
       "host": "localhost",
+      "preLaunchTask": "Run Home Assistant on port 8123",
       "pathMappings": [
         {
           "localRoot": "${workspaceFolder}",
