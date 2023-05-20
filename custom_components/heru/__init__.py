@@ -64,7 +64,7 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
 
     if config_entry.version == 1:
         new = {**config_entry.data}
-        new[CONF_DEVICE_MODEL] = "heru_100s_ec"
+        new[CONF_DEVICE_MODEL] = None
 
         config_entry.version = 2
         hass.config_entries.async_update_entry(config_entry, data=new)
