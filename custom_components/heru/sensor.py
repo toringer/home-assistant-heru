@@ -14,6 +14,8 @@ from homeassistant.const import STATE_ON, STATE_OFF
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 
+from .helpers.general import get_device_model
+
 from pymodbus.client import (
     AsyncModbusTcpClient,
 )
@@ -112,7 +114,7 @@ async def async_setup_entry(
     ]
 
     # If device model not selected, do not add those sensors
-    if entry.options[CONF_DEVICE_MODEL] is not None:
+    if get_device_model(entry) is not None:
         sensors.extend(
             [
                 HeruPowerSensor("Instantaneous power", entry),
@@ -137,7 +139,7 @@ class HeruPowerSensor(HeruEntity, SensorEntity):
         self._attr_name = name
         self._attr_icon = ICON_ENERGY
         self._device_name = entry.data[CONF_DEVICE_NAME]
-        self._device_model = entry.options[CONF_DEVICE_MODEL]
+        self._device_model = get_device_model(entry)
         self._heater_p_entity = (
             "sensor." + self._device_name.lower() + "_current_heating_power"
         )
