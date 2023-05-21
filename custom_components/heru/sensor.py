@@ -209,7 +209,7 @@ class HeruEnergySensor(HeruEntity, RestoreSensor):
             "sensor." + self._device_name.lower() + "_instantaneous_power"
         )
         self.entity_id = "sensor." + self._device_name.lower() + "_energy_consumption"
-        self._state = None
+        self._state = 0
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
