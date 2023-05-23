@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from ..const import (
     CONF_HOST_PORT,
     CONF_HOST_NAME,
+    DOMAIN,
 )
 from pymodbus.client import (
     AsyncModbusTcpClient,
@@ -26,6 +27,11 @@ class FlowValidator:
     ) -> list[str]:
         """Validate step_user"""
 
+        old_client = hass.data[DOMAIN]["client"]
+        if old_client is not None:
+            await old_client.close()
+            hass.data[DOMAIN]["client"] = old_client
+
         host_name = user_input[CONF_HOST_NAME]
         host_port = int(user_input[CONF_HOST_PORT])
         client = AsyncModbusTcpClient(host_name, host_port)
@@ -34,4 +40,8 @@ class FlowValidator:
             await client.close()
             return None
         await client.close()
+
+        if old_client is not None:
+            await old_client.connect()
+            hass.data[DOMAIN]["client"] = old_client
         return ("base", "failed_to_connect")
