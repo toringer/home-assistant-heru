@@ -1,0 +1,33 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Configuration du nom et de l'appareil.",
+        "data": {
+          "device_name": "Nom",
+          "device_model": "Modèle de l'appareil",
+          "host_name": "Nom de domaine ou adresse IP",
+          "host_port": "Numéro de port"
+        }
+      }
+    },
+    "error": {
+      "failed_to_connect": "Impossible de se connecter à l'appareil."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "description": "Configuration de l'appareil.",
+        "data": {
+          "device_model": "Modèle de l'appareil",
+          "host_name": "Nom de domaine ou adresse IP",
+          "host_port": "Numéro de port"
+        }
+      }
+    },
+    "error": {
+      "failed_to_connect": "Impossible de se connecter à l'appareil."
+    }
+  }
+}
