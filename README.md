@@ -6,10 +6,10 @@
 <img width="250" alt="Logo" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/logo.png">
 </p>
 
-# HERU energy recovery unit component for Home Assistant 
+# HERU energy recovery unit component for Home Assistant
 
 
-Control and monitor your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface. 
+Control and monitor your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface.
 
 <p align="center">
 <img width="250" alt="Sensors" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/sensors.png"><img width="250" alt="Controls" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/controls.png"><img width="250" alt="Diagnostic" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/diagnostic.png">
@@ -35,6 +35,16 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 
 Enable modbus and network on the HERU unit in the service menu using `1991` as pin code.
 
+### Energy consumption
+
+While the devices do not provide the actual power nor the energy consumption, we offer the users both quantities that we estimate based on the device model and the power values of the fans and heater.
+To enable those sensors, please choose the model of your device either when adding the integration or by clicking on `Configure` button:
+
+![Integration Configuration](./assets/integration_configuration.png)
+
+You can now select your model in the drop-down list:
+
+![Integration Options](./assets/integration_options.png)
 
 
 [releases-shield]: https://img.shields.io/github/v/release/toringer/home-assistant-heru?style=flat-square
