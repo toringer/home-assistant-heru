@@ -6,10 +6,10 @@
 <img width="250" alt="Logo" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/logo.png">
 </p>
 
-# HERU energy recovery unit component for Home Assistant 
+# HERU energy recovery unit component for Home Assistant
 
 
-Control and monitor your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface. 
+Control and monitor your Östberg HERU energy recovery unit from Home Assistant through the onboard modbus interface.
 
 <p align="center">
 <img width="250" alt="Sensors" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/sensors.png"><img width="250" alt="Controls" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/controls.png"><img width="250" alt="Diagnostic" src="https://raw.githubusercontent.com/toringer/home-assistant-heru/master/assets/diagnostic.png">
@@ -17,6 +17,47 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 
 
 *__Note__: The integrations requires HERU firmware version 1.09i or newer. Version 1.09i introduced one decimal to temperature sensors, and therefore needs to be scaled.*
+
+### Sensors
+| Sensor  | Modbus register |
+| ------------- | ------------- |
+|Boost input|1x00002|
+|Current exhaust fan power|3x00026|
+|Current exhaust fan step|3x00024|
+|Current heating power|3x00029|
+|Current heat/cold recovery power|3x00030|
+|Current supply fan power|3x00025|
+|Current supply fan step|3x00023|
+|Exhaust air temperature|3x00005|
+|Exhaust fan alarm|1x00022|
+|Extract air temperature|3x00004|
+|Filter days left|3x00020|
+|Filter timer alarm|1x00025|
+|Fire alarm|1x00010|
+|Heat recovery temperature|3x00007|
+|Outdoor temperature | 3x00002  |
+|Overpressure input|1x00003|
+|Rotor alarm|1x00011|
+|Supply air temperature|3x00003|
+|Supply fan alarm|1x00021|
+
+
+### Buttons
+| Button  | Modbus register |
+| ------------- | ------------- |
+| Clear Alarms |0x00005|
+|Reset filter timer|0x00006|
+|Sync date and time|4x00400 - 4x00405|
+
+
+### Switches
+| Switch  | Modbus register |
+| ------------- | ------------- |
+|Boost mode|0x00003|
+|Heater enabled|4x00067|
+|Overpressure mode|0x00002|
+|Preheater enabled|4x00064|
+
 
 
 ## Installation
