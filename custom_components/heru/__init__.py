@@ -1,5 +1,6 @@
 """HERU integration"""
 import logging
+import asyncio
 from custom_components.heru.helpers.general import get_parameter
 
 from homeassistant.config_entries import ConfigEntry
@@ -45,21 +46,33 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             hass.async_add_job(
                 hass.config_entries.async_forward_entry_setup(entry, platform)
             )
+
+    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
     _LOGGER.debug("async_unload_entry")
-    client = hass.data[DOMAIN]["client"]
-    await client.close()
-    hass.data[DOMAIN]["client"] = None
-    return True
+
+    unloaded = all(
+        await asyncio.gather(
+            *[
+                hass.config_entries.async_forward_entry_unload(entry, platform)
+                for platform in PLATFORMS
+            ]
+        )
+    )
+    if unloaded:
+        client = hass.data[DOMAIN]["client"]
+        if client is not None:
+            await client.close()
+            hass.data[DOMAIN]["client"] = None
+    return unloaded
 
 
-# async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
-#     """Reload config entry."""
-# TODO
-#     _LOGGER.debug("async_reload_entry")
-#     await async_unload_entry(hass, entry)
-#     await async_setup_entry(hass, entry)
+async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload config entry."""
+    _LOGGER.debug("async_reload_entry")
+    await async_unload_entry(hass, entry)
+    await async_setup_entry(hass, entry)
