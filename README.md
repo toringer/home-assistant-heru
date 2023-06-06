@@ -53,6 +53,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 ### Switches
 | Switch  | Modbus register |
 | ------------- | ------------- |
+|Away mode|0x00004|
 |Boost mode|0x00003|
 |Heater enabled|4x00067|
 |Overpressure mode|0x00002|

@@ -33,6 +33,7 @@ async def async_setup_entry(
     switches = [
         HeruSwitchActive("Overpressure mode", 1, REGISTER_COILS, entry, client),
         HeruSwitchActive("Boost mode", 2, REGISTER_COILS, entry, client),
+        HeruSwitchActive("Away mode", 3, REGISTER_COILS, entry, client),
         HeruSwitchActive("Preheater enabled", 63, REGISTER_HOLDING, entry, client),
         HeruSwitchActive("Heater enabled", 66, REGISTER_HOLDING, entry, client),
     ]
