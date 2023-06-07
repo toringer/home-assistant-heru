@@ -78,6 +78,14 @@ async def async_setup_entry(
             client,
             entry,
         ),
+        HeruAlarmSensor(
+            "Night cooling active",
+            ICON_ALARM,
+            EntityCategory.DIAGNOSTIC,
+            37,
+            client,
+            entry,
+        ),
         HeruNumberSensor(
             "Current heating power",
             ICON_HEAT_WAVE,

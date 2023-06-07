@@ -36,6 +36,7 @@ async def async_setup_entry(
         HeruSwitchActive("Away mode", 3, REGISTER_COILS, entry, client),
         HeruSwitchActive("Preheater enabled", 63, REGISTER_HOLDING, entry, client),
         HeruSwitchActive("Heater enabled", 66, REGISTER_HOLDING, entry, client),
+        HeruSwitchActive("Night cooling enabled", 18, REGISTER_HOLDING, entry, client),
     ]
 
     async_add_devices(switches, update_before_add=True)

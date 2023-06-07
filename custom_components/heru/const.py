@@ -13,6 +13,7 @@ ICON_HEAT_WAVE = "mdi:heat-wave"
 ICON_EXCHANGE = "mdi:swap-horizontal"
 ICON_ALARM = "mdi:bell"
 ICON_SWITCH = "mdi:electric-switch"
+ICON_THERMOMETER = "mdi:thermometer"
 
 # Platforms
 SENSOR = Platform.SENSOR
@@ -21,7 +22,7 @@ BUTTON = Platform.BUTTON
 NUMBER = Platform.NUMBER
 SELECT = Platform.SELECT
 CLIMATE = Platform.CLIMATE
-PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE]
+PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE, NUMBER]
 # PLATFORMS = [SWITCH, SENSOR, BUTTON, NUMBER, SELECT]
 
 # Modbus
