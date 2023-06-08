@@ -13,6 +13,6 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.analysis.extraPaths": [
-        "/home/vscode/.local/lib/python3.10/site-packages/homeassistant"
+        "/home/vscode/.local/lib/python3.11/site-packages/homeassistant"
     ]
 }
