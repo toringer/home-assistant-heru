@@ -268,7 +268,7 @@ HERU_SENSORS = [
         "register_type": DISCRETE_INPUTS,
     },
     {
-        "name": "Startup 2st phase",
+        "name": "Startup 2nd phase",
         "address": 28,
         "scale": None,
         "icon": ICON_START,

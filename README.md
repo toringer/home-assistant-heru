@@ -40,7 +40,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Overpressure input|1x00003|
 |Rotor alarm|1x00011|
 |Startup 1st phase|1x00028|
-|Startup 2st phase|1x00029|
+|Startup 2nd phase|1x00029|
 |Supply air temperature|3x00003|
 |Supply fan alarm|1x00021|
 
