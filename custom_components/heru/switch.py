@@ -1,26 +1,20 @@
 """Switch platform for HERU."""
 import logging
 from typing import Any
-import datetime
 
 from homeassistant.components.switch import SwitchEntity
-from homeassistant.core import HomeAssistant
-from pymodbus.client import (
-    AsyncModbusTcpClient,
-)
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
-    DEFAULT_SLAVE,
+    COIL,
     DOMAIN,
-    REGISTER_COILS,
-    REGISTER_HOLDING,
-    SWITCH,
+    HERU_SWITCHES,
+    HOLDING_REGISTERS,
 )
-
 from .entity import HeruEntity
 
 _LOGGER = logging.getLogger(__name__)
-SCAN_INTERVAL = datetime.timedelta(seconds=15)
 
 
 async def async_setup_entry(
@@ -28,93 +22,58 @@ async def async_setup_entry(
 ):  # pylint: disable=unused-argument
     """Setup switch platform."""
     _LOGGER.debug("HERU.switch.py")
-    client = hass.data[DOMAIN]["client"]
 
-    switches = [
-        HeruSwitchActive("Overpressure mode", 1, REGISTER_COILS, entry, client),
-        HeruSwitchActive("Boost mode", 2, REGISTER_COILS, entry, client),
-        HeruSwitchActive("Away mode", 3, REGISTER_COILS, entry, client),
-        HeruSwitchActive("Preheater enabled", 63, REGISTER_HOLDING, entry, client),
-        HeruSwitchActive("Heater enabled", 66, REGISTER_HOLDING, entry, client),
-        HeruSwitchActive("Night cooling enabled", 18, REGISTER_HOLDING, entry, client),
-    ]
+    coordinator = hass.data[DOMAIN]["coordinator"]
+    switches = []
+    for switch in HERU_SWITCHES:
+        switches.append(HeruSwitch(coordinator, switch, entry))
 
-    async_add_devices(switches, update_before_add=True)
+    async_add_devices(switches)
 
 
 class HeruSwitch(HeruEntity, SwitchEntity):
     """HERU switch class."""
 
-    _attr_icon = "mdi:toggle-switch-variant"
-
-    def __init__(self, name: str, address: int, entry, hub: AsyncModbusTcpClient):
+    def __init__(self, coordinator: CoordinatorEntity, idx, entry):
         _LOGGER.debug("HeruSwitch.__init__()")
-        super().__init__(entry)
-        self._hub = hub
-        id_name = name.replace(" ", "").lower()
-        self._attr_unique_id = ".".join([entry.entry_id, str(address), SWITCH, id_name])
+        super().__init__(coordinator, idx, entry)
+        self.idx = idx
+        self.coordinator = coordinator
+        self._attr_is_on = self._get_value()
 
+    def _get_value(self):
+        """Get the value from the coordinator"""
+        if self.idx["register_type"] == COIL:
+            return self.coordinator.coils[self.idx["address"]]
+        if self.idx["register_type"] == HOLDING_REGISTERS:
+            return self.coordinator.holding_registers[self.idx["address"]]
 
-class HeruSwitchActive(HeruSwitch):
-    """HERU active switch class."""
-
-    def __init__(
-        self,
-        name: str,
-        address: int,
-        register_type,
-        entry,
-        client: AsyncModbusTcpClient,
-    ):
-        _LOGGER.debug("HeruSwitchActive.__init__()")
-        super().__init__(name, address, entry, client)
-        self._address = address
-        self._client = client
-        self._attr_name = name
-        self._register_type = register_type
-        self._skip_next_update = False
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        _LOGGER.debug("HeruSwitch._handle_coordinator_update()")
+        self._attr_is_on = self._get_value()
+        _LOGGER.debug(
+            "%s: %s",
+            self._attr_name,
+            self._attr_is_on,
+        )
+        self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the entity on."""
-        _LOGGER.debug("HeruSwitchActive.async_turn_on()")
-        self._skip_next_update = True
-        if self._register_type == REGISTER_COILS:
-            result = await self._client.write_coil(self._address, True, DEFAULT_SLAVE)
-        elif self._register_type == REGISTER_HOLDING:
-            result = await self._client.write_register(self._address, 1, DEFAULT_SLAVE)
-        else:
-            raise Exception("register type '%s' not supported", self._register_type)
+        _LOGGER.debug("HeruSwitch.async_turn_on()")
+        if self.idx["register_type"] == COIL:
+            result = await self.coordinator.write_coil(self.idx["address"], True)
+        elif self.idx["register_type"] == HOLDING_REGISTERS:
+            result = await self.coordinator.write_register(self.idx["address"], 1)
         _LOGGER.debug("async_turn_on: %s", result)
-        self._attr_is_on = True
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
-        _LOGGER.debug("HeruSwitchActive.async_turn_off()")
-        self._skip_next_update = True
-        if self._register_type == REGISTER_COILS:
-            result = await self._client.write_coil(self._address, False, DEFAULT_SLAVE)
-        elif self._register_type == REGISTER_HOLDING:
-            result = await self._client.write_register(self._address, 0, DEFAULT_SLAVE)
-        else:
-            raise Exception("register type '%s' not supported", self._register_type)
+        _LOGGER.debug("HeruSwitch.async_turn_off()")
+        if self.idx["register_type"] == COIL:
+            result = await self.coordinator.write_coil(self.idx["address"], False)
+        elif self.idx["register_type"] == HOLDING_REGISTERS:
+            result = await self.coordinator.write_register(self.idx["address"], 0)
         _LOGGER.debug("async_turn_off: %s", result)
-        self._attr_is_on = False
-
-    async def async_update(self):
-        """async_update"""
-        if self._skip_next_update is True:
-            self._skip_next_update = False
-            _LOGGER.debug("%s: Skip update is active", self._attr_name)
-            return
-
-        if self._register_type == REGISTER_COILS:
-            result = await self._client.read_coils(self._address, 1, DEFAULT_SLAVE)
-            self._attr_is_on = result.bits[0]
-        elif self._register_type == REGISTER_HOLDING:
-            result = await self._client.read_holding_registers(
-                self._address, 1, DEFAULT_SLAVE
-            )
-            self._attr_is_on = result.registers[0]
-        else:
-            raise Exception("register type '%s' not supported", self._register_type)
-        _LOGGER.debug("%s: %s", self._attr_name, self._attr_is_on)

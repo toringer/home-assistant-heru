@@ -2,6 +2,7 @@
 import logging
 import asyncio
 from custom_components.heru.helpers.general import get_parameter
+from custom_components.heru.heru_coordinator import HeruCoordinator
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
@@ -33,12 +34,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     host_name = get_parameter(entry, CONF_HOST_NAME)
     host_port = int(get_parameter(entry, CONF_HOST_PORT))
     client = AsyncModbusTcpClient(host_name, host_port)
-    await client.connect()
-    assert client.connected
+
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {}
 
-    hass.data[DOMAIN]["client"] = client
+    coordinator = HeruCoordinator(hass, client)
+    await coordinator.async_config_entry_first_refresh()
+
+    hass.data[DOMAIN]["coordinator"] = coordinator
 
     for platform in PLATFORMS:
         if entry.options.get(platform, True):
@@ -64,10 +67,10 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
     )
     if unloaded:
-        client = hass.data[DOMAIN]["client"]
-        if client is not None:
-            await client.close()
-            hass.data[DOMAIN]["client"] = None
+        coordinator = hass.data[DOMAIN]["coordinator"]
+        if coordinator is not None:
+            coordinator.close()
+            hass.data[DOMAIN]["coordinator"] = None
     return unloaded
 
 

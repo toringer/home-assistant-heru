@@ -1,25 +1,26 @@
 """HERU Entity class"""
 import logging
 from homeassistant.helpers.entity import Entity
-
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN, NAME, VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class HeruEntity(Entity):
+class HeruEntity(CoordinatorEntity, Entity):
     """Entity class."""
 
-    _attr_icon = "mdi:flash"
     _attr_has_entity_name = True
 
-    def __init__(self, config_entry):
+    def __init__(self, coordinator: CoordinatorEntity, idx, config_entry):
+        super().__init__(coordinator)
         self.config_entry = config_entry
+        self.idx = idx
 
-    def update_ha_state(self):
-        """Update the HA state"""
-        if self.entity_id is not None:
-            self.async_schedule_update_ha_state()
+        self._attr_name = self.idx["name"]
+        self._attr_icon = self.idx["icon"]
+        name = self._attr_name.replace(" ", "_").lower()
+        self._attr_unique_id = "_".join([name, str(self.idx["address"])])
 
     @property
     def device_info(self):

@@ -27,21 +27,21 @@ class FlowValidator:
     ) -> list[str]:
         """Validate step_user"""
 
-        old_client = hass.data[DOMAIN]["client"]
-        if old_client is not None:
-            await old_client.close()
-            hass.data[DOMAIN]["client"] = old_client
+        coordinator = None
+        if DOMAIN in hass.data:
+            coordinator = hass.data[DOMAIN]["coordinator"]
+            if coordinator is not None:
+                coordinator.pause()
 
         host_name = user_input[CONF_HOST_NAME]
         host_port = int(user_input[CONF_HOST_PORT])
         client = AsyncModbusTcpClient(host_name, host_port)
         await client.connect()
         if client.connected:
-            await client.close()
+            client.close()
             return None
-        await client.close()
+        client.close()
 
-        if old_client is not None:
-            await old_client.connect()
-            hass.data[DOMAIN]["client"] = old_client
+        if coordinator is not None:
+            await coordinator.resume()
         return ("base", "failed_to_connect")
