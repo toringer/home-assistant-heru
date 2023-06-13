@@ -1,8 +1,9 @@
 """HERU Entity class"""
 import logging
+from custom_components.heru.helpers.general import get_parameter
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .const import DOMAIN, NAME, VERSION
+from .const import CONF_HOST_NAME, DOMAIN, NAME, VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,8 +20,10 @@ class HeruEntity(CoordinatorEntity, Entity):
 
         self._attr_name = self.idx["name"]
         self._attr_icon = self.idx["icon"]
-        name = self._attr_name.replace(" ", "_").lower()
-        self._attr_unique_id = "_".join([name, str(self.idx["address"])])
+
+        ip = get_parameter(config_entry, CONF_HOST_NAME).replace(".", "")
+        modbus_address = str(self.idx["modbus_address"])
+        self._attr_unique_id = f"{ip}_{modbus_address}"
 
     @property
     def device_info(self):
