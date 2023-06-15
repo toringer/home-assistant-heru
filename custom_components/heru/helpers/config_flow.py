@@ -28,7 +28,7 @@ class FlowValidator:
         """Validate step_user"""
 
         coordinator = None
-        if DOMAIN in hass.data:
+        if DOMAIN in hass.data and "coordinator" in hass.data[DOMAIN]:
             coordinator = hass.data[DOMAIN]["coordinator"]
             if coordinator is not None:
                 coordinator.pause()

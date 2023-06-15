@@ -22,6 +22,7 @@ ICON_TIME_SYNC = "mdi:timer-sync"
 ICON_CALENDAR = "mdi:calendar"
 ICON_THERMOSTAT = "mdi:home-thermometer"
 ICON_START = "mdi:ray-start-arrow"
+ICON_COOLING = "mdi:snowflake"
 
 # Platforms
 SENSOR = Platform.SENSOR
@@ -159,7 +160,7 @@ HERU_SENSORS = [
         "modbus_address": "1x00038",
         "address": 37,
         "scale": None,
-        "icon": ICON_ALARM,
+        "icon": ICON_COOLING,
         "unit_of_measurement": None,
         "device_class": None,
         "entity_category": EntityCategory.DIAGNOSTIC,
@@ -401,7 +402,7 @@ HERU_SWITCHES = [
         "name": "Night cooling enabled",
         "modbus_address": "4x00019",
         "address": 18,
-        "icon": ICON_SWITCH,
+        "icon": ICON_COOLING,
         "register_type": HOLDING_REGISTERS,
     },
 ]
