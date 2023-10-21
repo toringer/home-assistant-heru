@@ -364,6 +364,13 @@ HERU_BUTTONS = [
 
 HERU_SWITCHES = [
     {
+        "name": "Power",
+        "modbus_address": "0x00001",
+        "address": 0,
+        "icon": ICON_SWITCH,
+        "register_type": COIL,
+    },
+    {
         "name": "Overpressure mode",
         "modbus_address": "0x00002",
         "address": 1,
