@@ -61,6 +61,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Heater enabled|4x00067|
 |Night cooling enabled|4x00019|
 |Overpressure mode|0x00002|
+|Power|0x00001|
 |Preheater enabled|4x00064|
 
 ### Numbers
