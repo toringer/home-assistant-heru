@@ -53,6 +53,10 @@ class HeruSensor(HeruEntity, SensorEntity):
         """Get the value from the coordinator"""
         if self.idx["register_type"] == INPUT_REGISTERS:
             value = self.coordinator.input_registers[self.idx["address"]]
+            # Temporary quick fix for signed int...
+            if self.idx["device_class"] == SensorDeviceClass.TEMPERATURE and value > 3200:
+                value = value - 65535
+
             if self._attr_device_class == SensorDeviceClass.ENUM:
                 return self._attr_options[value]
             return value * self.idx["scale"]
