@@ -55,7 +55,7 @@ class HeruSensor(HeruEntity, SensorEntity):
         if self.idx["register_type"] == INPUT_REGISTERS:
             value = self.coordinator.input_registers[self.idx["address"]]
 
-            decorder = BinaryPayloadDecoder.fromRegisters([value], byteorder=Endian.Big, wordorder=Endian.Big)
+            decorder = BinaryPayloadDecoder.fromRegisters([value], byteorder=Endian.BIG, wordorder=Endian.BIG)
             value = decorder.decode_16bit_int()
 
             if self._attr_device_class == SensorDeviceClass.ENUM:
