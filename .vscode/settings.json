@@ -1,6 +1,4 @@
 {
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
     "python.defaultInterpreterPath": "/usr/bin/python",
     "files.associations": {
         "*.yaml": "home-assistant"
@@ -13,6 +11,6 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.analysis.extraPaths": [
-        "/home/vscode/.local/lib/python3.11/site-packages/homeassistant"
+        "/home/vscode/.local/lib/python3.12/site-packages/homeassistant"
     ]
 }
