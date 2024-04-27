@@ -3,6 +3,31 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Home Assistant: Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "homeassistant",
+      "justMyCode": false,
+      "args": [
+        "--debug",
+        "-c",
+        "config"
+      ]
+    },
+    {
+      "name": "Home Assistant: Debug (skip pip)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "homeassistant",
+      "justMyCode": false,
+      "args": [
+        "--debug",
+        "-c",
+        "config",
+        "--skip-pip"
+      ]
+    },
+    {
       // Example of attaching to local debug server
       "name": "Python: Attach Local",
       "type": "python",
