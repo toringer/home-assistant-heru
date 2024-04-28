@@ -2,7 +2,7 @@
 
 The easiest way to get started with custom integration development is to use Visual Studio Code with devcontainers. This approach will create a preconfigured development environment with all the tools you need.
 
-In the container you will have a dedicated Home Assistant core instance running with your custom component code. You can configure this instance by updating the `./devcontainer/configuration.yaml` file.
+In the container you will have a dedicated Home Assistant core instance running with your custom component code. You can configure this instance by updating the `config/configuration.yaml` file.
 
 **Prerequisites**
 
@@ -37,14 +37,14 @@ The available tasks are:
 
 Task | Description
 -- | --
-Run Home Assistant on port 8123 | Launch Home Assistant with your custom component code and the configuration defined in `.devcontainer/configuration.yaml`.
+Run Home Assistant on port 8123 | Launch Home Assistant with your custom component code and the configuration defined in `config/configuration.yaml`.
 
 ### Step by Step debugging
 
 With the development container,
 you can test your custom component in Home Assistant with step by step debugging.
 
-You need to modify the `configuration.yaml` file in `.devcontainer` folder
+You need to modify the `configuration.yaml` file in `config` folder
 by uncommenting the line:
 
 ```yaml
