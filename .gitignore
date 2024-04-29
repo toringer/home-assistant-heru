@@ -5,3 +5,5 @@ venv
 .coverage
 .idea
 issues
+config/*
+!config/configuration.yaml
