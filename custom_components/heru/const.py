@@ -300,6 +300,17 @@ HERU_SENSORS = [
         "entity_category": EntityCategory.DIAGNOSTIC,
         "register_type": DISCRETE_INPUTS,
     },
+    {
+        "name": "Cooling alarm",
+        "modbus_address": "1x00032",
+        "address": 31,
+        "scale": None,
+        "icon": ICON_ALARM,
+        "unit_of_measurement": None,
+        "device_class": None,
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "register_type": DISCRETE_INPUTS,
+    },
 ]
 
 
@@ -409,6 +420,13 @@ HERU_SWITCHES = [
         "name": "Night cooling enabled",
         "modbus_address": "4x00019",
         "address": 18,
+        "icon": ICON_COOLING,
+        "register_type": HOLDING_REGISTERS,
+    },
+        {
+        "name": "Cooler enabled",
+        "modbus_address": "4x00069",
+        "address": 68,
         "icon": ICON_COOLING,
         "register_type": HOLDING_REGISTERS,
     },

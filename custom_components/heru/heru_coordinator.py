@@ -57,7 +57,7 @@ class HeruCoordinator(DataUpdateCoordinator):
 
                 # 4x00001 - 4x00067
                 holding_registers_result = await self.client.read_holding_registers(
-                    0, 67, DEFAULT_SLAVE
+                    0, 69, DEFAULT_SLAVE
                 )
                 self.holding_registers = holding_registers_result.registers
 
