@@ -48,8 +48,6 @@ class HeruThermostat(HeruEntity, ClimateEntity):
 
     # https://developers.home-assistant.io/docs/core/entity/climate/
 
-    _attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE
-
     def __init__(self, coordinator: CoordinatorEntity, idx, config_entry) -> None:
         """Initialize the modbus thermostat."""
         _LOGGER.debug("HeruSensor.__init__()")
@@ -63,8 +61,14 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
         self._attr_temperature_unit = UnitOfTemperature.CELSIUS
         self._attr_precision = PRECISION_WHOLE
-        self._attr_hvac_mode = HVACMode.HEAT
+        self._enable_turn_on_off_backwards_compatibility = False
+        self._attr_supported_features = (
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.TURN_OFF
+            | ClimateEntityFeature.TURN_ON
+        )
 
+        self._attr_hvac_mode = self._get_hvac_mode()
         self._attr_current_temperature = self._get_current_temperature()
         self._attr_target_temperature = self._get_target_temperature()
         self._attr_hvac_action = self._get_hvac_action()
@@ -84,6 +88,14 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         else:
             return HVACAction.HEATING
 
+    def _get_hvac_mode (self):
+        action = self.coordinator.coils[0]
+        if action == False:
+            return HVACMode.OFF
+        else:
+            return HVACMode.HEAT
+
+
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
@@ -91,6 +103,7 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         self._attr_current_temperature = self._get_current_temperature()
         self._attr_target_temperature = self._get_target_temperature()
         self._attr_hvac_action = self._get_hvac_action()
+        self._attr_hvac_mode = self._get_hvac_mode()
 
         _LOGGER.debug(
             "%s: %f %f",
@@ -111,6 +124,17 @@ class HeruThermostat(HeruEntity, ClimateEntity):
             await self.coordinator.write_coil(0, True)
         elif hvac_mode == HVACMode.OFF:
             await self.coordinator.write_coil(0, False)
+        await self.coordinator.async_request_refresh()
+
+    async def async_turn_on(self):
+        """Turn the entity on."""
+        _LOGGER.debug("Turn on")
+        await self.async_set_hvac_mode(HVACMode.HEAT)
+
+    async def async_turn_off(self):
+        """Turn the entity off."""
+        _LOGGER.debug("Turn off")
+        await self.async_set_hvac_mode(HVACMode.OFF)
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         """Set new target temperature."""
