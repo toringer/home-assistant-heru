@@ -1,2 +1,2 @@
 homeassistant==2024.4.3
-pymodbus==3.6.8
+pymodbus==3.7.0
