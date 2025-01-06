@@ -33,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.debug("async_setup_entry")
     host_name = get_parameter(entry, CONF_HOST_NAME)
     host_port = int(get_parameter(entry, CONF_HOST_PORT))
-    client = AsyncModbusTcpClient(host_name, host_port)
+    client = AsyncModbusTcpClient(host=host_name, port=host_port)
 
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {}
