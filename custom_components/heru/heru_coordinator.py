@@ -42,22 +42,22 @@ class HeruCoordinator(DataUpdateCoordinator):
                     await self.client.connect()
 
                 # 0x00001 - 0x00007
-                coils_result = await self.client.read_coils(0, 7, DEFAULT_SLAVE)
+                coils_result = await self.client.read_coils(0, count=7, slave=DEFAULT_SLAVE)
                 self.coils = coils_result.bits
 
                 # 1x00001 - 1x00037
                 discrete_inputs_result = await self.client.read_discrete_inputs(
-                    0, 54, DEFAULT_SLAVE
+                    0, count=54, slave=DEFAULT_SLAVE
                 )
                 self.discrete_inputs = discrete_inputs_result.bits
 
                 # 3x00001 - 3x00034
-                result = await self.client.read_input_registers(0, 33, DEFAULT_SLAVE)
+                result = await self.client.read_input_registers(0, count=33, slave=DEFAULT_SLAVE)
                 self.input_registers = result.registers
 
                 # 4x00001 - 4x00067
                 holding_registers_result = await self.client.read_holding_registers(
-                    0, 69, DEFAULT_SLAVE
+                    0, count=69, slave=DEFAULT_SLAVE
                 )
                 self.holding_registers = holding_registers_result.registers
 
@@ -67,13 +67,13 @@ class HeruCoordinator(DataUpdateCoordinator):
 
     async def write_register(self, address: int, value: int):
         """Write to modbus register"""
-        result = await self.client.write_register(address, value, DEFAULT_SLAVE)
+        result = await self.client.write_register(address, value, slave=DEFAULT_SLAVE)
         await self.async_refresh()
         return result
 
     async def write_coil(self, address: int, value):
         """Write to modbus coil"""
-        result = await self.client.write_coil(address, value, DEFAULT_SLAVE)
+        result = await self.client.write_coil(address, value, slave=DEFAULT_SLAVE)
         await self.async_refresh()
         return result
 

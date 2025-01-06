@@ -35,7 +35,7 @@ class FlowValidator:
 
         host_name = user_input[CONF_HOST_NAME]
         host_port = int(user_input[CONF_HOST_PORT])
-        client = AsyncModbusTcpClient(host_name, host_port)
+        client = AsyncModbusTcpClient(host_name, port=host_port)
         await client.connect()
         if client.connected:
             client.close()

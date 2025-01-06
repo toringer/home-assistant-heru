@@ -5,7 +5,8 @@ from custom_components.heru.helpers.general import get_parameter
 from custom_components.heru.heru_coordinator import HeruCoordinator
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Config, HomeAssistant
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
 
 from pymodbus.client import (
     AsyncModbusTcpClient,
@@ -22,7 +23,7 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 async def async_setup(
-    hass: HomeAssistant, config: Config
+    hass: HomeAssistant, config: ConfigType
 ):  # pylint: disable=unused-argument
     """Set up this integration using YAML is not supported."""
     return True
@@ -33,7 +34,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.debug("async_setup_entry")
     host_name = get_parameter(entry, CONF_HOST_NAME)
     host_port = int(get_parameter(entry, CONF_HOST_PORT))
-    client = AsyncModbusTcpClient(host_name, host_port)
+    client = AsyncModbusTcpClient(host_name, port=host_port)
 
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {}
