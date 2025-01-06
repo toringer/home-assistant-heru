@@ -7,7 +7,7 @@ from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from pymodbus.payload import BinaryPayloadDecoder, Endian
+from pymodbus.client.mixin import ModbusClientMixin
 
 from .const import (
     DISCRETE_INPUTS,
@@ -54,9 +54,7 @@ class HeruSensor(HeruEntity, SensorEntity):
         """Get the value from the coordinator"""
         if self.idx["register_type"] == INPUT_REGISTERS:
             value = self.coordinator.input_registers[self.idx["address"]]
-
-            decorder = BinaryPayloadDecoder.fromRegisters([value], byteorder=Endian.BIG, wordorder=Endian.BIG)
-            value = decorder.decode_16bit_int()
+            value = ModbusClientMixin.convert_from_registers([value], ModbusClientMixin.DATATYPE.INT16)
 
             if self._attr_device_class == SensorDeviceClass.ENUM:
                 return self._attr_options[value]
