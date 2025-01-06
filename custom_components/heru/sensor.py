@@ -1,12 +1,14 @@
 """Sensor platform for HERU."""
 import logging
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
+
 from pymodbus.client.mixin import ModbusClientMixin
 
 from .const import (
@@ -30,6 +32,7 @@ async def async_setup_entry(
     sensors = []
     for sensor in HERU_SENSORS:
         sensors.append(HeruSensor(coordinator, sensor, entry))
+    sensors.append(HeruLastSeenSensor(coordinator, entry))
     async_add_devices(sensors)
 
 
@@ -46,6 +49,7 @@ class HeruSensor(HeruEntity, SensorEntity):
         self._attr_device_class = self.idx["device_class"]
         if self._attr_device_class == SensorDeviceClass.ENUM:
             self._attr_options = self.idx["options"]
+        self._attr_state_class = self.idx["state_class"]
 
         self._attr_entity_category = self.idx["entity_category"]
         self._attr_native_value = self._get_value()
@@ -70,6 +74,41 @@ class HeruSensor(HeruEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("HeruSensor._handle_coordinator_update()")
+        self._attr_native_value = self._get_value()
+        _LOGGER.debug(
+            "%s: %s %s",
+            self._attr_name,
+            self._attr_native_value,
+            self._attr_native_unit_of_measurement,
+        )
+        self.async_write_ha_state()
+
+
+class HeruLastSeenSensor(HeruEntity, SensorEntity):
+    """HERU last seen sensor class."""
+
+    def __init__(self, coordinator: CoordinatorEntity, config_entry):
+        _LOGGER.debug("HeruLastSeenSensor.__init__()")
+        idx = {
+            "name": "Last seen",
+            "device_class": SensorDeviceClass.TIMESTAMP,
+            "icon": "mdi:clock",
+            "modbus_address": "last_seen",
+        }
+        super().__init__(coordinator, idx, config_entry)
+        self._attr_native_unit_of_measurement = None
+        self._attr_device_class = SensorDeviceClass.TIMESTAMP
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        self._attr_native_value = self._get_value()
+
+    def _get_value(self):
+        """Get the value from the coordinator"""
+        return dt_util.now(dt_util.DEFAULT_TIME_ZONE)
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        _LOGGER.debug("HeruLastSeenSensor._handle_coordinator_update()")
         self._attr_native_value = self._get_value()
         _LOGGER.debug(
             "%s: %s %s",
