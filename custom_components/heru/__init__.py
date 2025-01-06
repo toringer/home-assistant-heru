@@ -5,7 +5,8 @@ from custom_components.heru.helpers.general import get_parameter
 from custom_components.heru.heru_coordinator import HeruCoordinator
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Config, HomeAssistant
+from homeassistant.core import HomeAssistant
+from homeassistant.core_config import Config  # Updated import
 
 from pymodbus.client import (
     AsyncModbusTcpClient,
@@ -33,7 +34,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.debug("async_setup_entry")
     host_name = get_parameter(entry, CONF_HOST_NAME)
     host_port = int(get_parameter(entry, CONF_HOST_PORT))
-    client = AsyncModbusTcpClient(host_name, host_port)
+    client = AsyncModbusTcpClient(host=host_name, port=host_port)  # Updated instantiation
 
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {}
