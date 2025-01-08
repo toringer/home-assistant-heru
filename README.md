@@ -35,9 +35,11 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Filter timer alarm|1x00025|
 |Fire alarm|1x00010|
 |Heat recovery temperature|3x00007|
+|Last seen|_Calculated_|
 |Night cooling active|1x00038|
 |Outdoor temperature | 3x00002  |
 |Overpressure input|1x00003|
+|Recycle efficiency|_Calculated_|
 |Rotor alarm|1x00011|
 |Startup 1st phase|1x00028|
 |Startup 2nd phase|1x00029|

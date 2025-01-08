@@ -1,7 +1,7 @@
 """Sensor platform for HERU."""
 import logging
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, EntityCategory
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, EntityCategory, SensorStateClass
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
@@ -33,6 +33,7 @@ async def async_setup_entry(
     for sensor in HERU_SENSORS:
         sensors.append(HeruSensor(coordinator, sensor, entry))
     sensors.append(HeruLastSeenSensor(coordinator, entry))
+    sensors.append(HeruRecycleEfficiencySensor(coordinator, entry))
     async_add_devices(sensors)
 
 
@@ -109,6 +110,54 @@ class HeruLastSeenSensor(HeruEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("HeruLastSeenSensor._handle_coordinator_update()")
+        self._attr_native_value = self._get_value()
+        _LOGGER.debug(
+            "%s: %s %s",
+            self._attr_name,
+            self._attr_native_value,
+            self._attr_native_unit_of_measurement,
+        )
+        self.async_write_ha_state()
+
+
+class HeruRecycleEfficiencySensor(HeruEntity, SensorEntity):
+    """HeruRecycleEfficiencySensor class."""
+
+    def __init__(self, coordinator: CoordinatorEntity, config_entry):
+        _LOGGER.debug("HeruRecycleEfficiencySensor.__init__()")
+        idx = {
+            "name": "Recycle efficiency",
+            "icon": "mdi:recycle",
+            "modbus_address": "recycle_efficiency",
+        }
+        super().__init__(coordinator, idx, config_entry)
+        self.coordinator = coordinator
+        self.idx = idx
+        self._attr_native_unit_of_measurement = "%"
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+        self._attr_native_value = self._get_value()
+
+    def _get_value(self):
+        """Get the value from the coordinator"""
+        heat_recovery_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.input_registers[6]], ModbusClientMixin.DATATYPE.INT16) * 0.1
+        outdoor_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.input_registers[1]], ModbusClientMixin.DATATYPE.INT16) * 0.1
+        extract_air_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.input_registers[3]], ModbusClientMixin.DATATYPE.INT16) * 0.1
+        _LOGGER.debug(
+            "Recycle efficiency: %s, %s, %s",
+            heat_recovery_temperature,
+            outdoor_temperature,
+            extract_air_temperature,
+        )
+        try:
+            factor = ((heat_recovery_temperature - outdoor_temperature) / (extract_air_temperature - outdoor_temperature)) * 100
+            return round(factor, 2)
+        except Exception:
+            return 0
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        _LOGGER.debug("HeruRecycleEfficiencySensor._handle_coordinator_update()")
         self._attr_native_value = self._get_value()
         _LOGGER.debug(
             "%s: %s %s",
