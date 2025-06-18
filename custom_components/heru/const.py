@@ -165,6 +165,18 @@ HERU_SENSORS = [
         "register_type": INPUT_REGISTERS,
     },
     {
+        "name": "Current cooling power",
+        "modbus_address": "3x00031",
+        "address": 30,
+        "scale": 0.3921568627,
+        "icon": ICON_HEAT_WAVE,
+        "unit_of_measurement": "%",
+        "device_class": None,
+        "state_class": None,
+        "entity_category": None,
+        "register_type": INPUT_REGISTERS,
+    },
+    {
         "name": "Current supply fan power",
         "modbus_address": "3x00025",
         "address": 24,
