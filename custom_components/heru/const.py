@@ -23,6 +23,7 @@ ICON_CALENDAR = "mdi:calendar"
 ICON_THERMOSTAT = "mdi:home-thermometer"
 ICON_START = "mdi:ray-start-arrow"
 ICON_COOLING = "mdi:snowflake"
+ICON_HUMIDITY = "mdi:water-percent"
 
 # Platforms
 SENSOR = Platform.SENSOR
@@ -393,6 +394,18 @@ HERU_SENSORS = [
         "state_class": None,
         "entity_category": EntityCategory.DIAGNOSTIC,
         "register_type": DISCRETE_INPUTS,
+    },
+    {
+        "name": "Quality sensor 1 value",
+        "modbus_address": "3x00042",
+        "address": 41,
+        "scale": 0.1,
+        "icon": ICON_HUMIDITY,
+        "unit_of_measurement": "%",
+        "device_class": SensorDeviceClass.HUMIDITY,
+        "state_class": SensorDeviceClass.MEASUREMENT,
+        "entity_category": None,
+        "register_type": INPUT_REGISTERS,
     },
 ]
 
