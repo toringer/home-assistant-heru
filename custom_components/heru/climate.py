@@ -75,7 +75,20 @@ class HeruThermostat(HeruEntity, ClimateEntity):
 
     def _get_current_temperature(self):
         """Get the value from the coordinator"""
-        return self.coordinator.input_registers[2] * 0.1
+        # regulation_mode
+        # - Mode 0 (Supply): Use supply air temperature (register 3x00003)
+        # - Mode 1 (Extract): Use extract air temperature (register 3x00004)
+        # - Mode 2 (Room): Use Room temperature (register 3x00008)
+        # - Default: Fall back to supply air temperature
+        regulation_mode = self.coordinator.holding_registers[11]
+        if regulation_mode == 0:  # Supply
+            return self.coordinator.input_registers[2] * 0.1
+        elif regulation_mode == 1:  # Extract
+            return self.coordinator.input_registers[3] * 0.1
+        elif regulation_mode == 2:  # Room
+            return self.coordinator.input_registers[7] * 0.1
+        else:
+            return self.coordinator.input_registers[2] * 0.1  # Default to Supply
 
     def _get_target_temperature(self):
         """Get the value from the coordinator"""
