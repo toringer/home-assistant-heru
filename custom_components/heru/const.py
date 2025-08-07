@@ -24,6 +24,7 @@ ICON_THERMOSTAT = "mdi:home-thermometer"
 ICON_START = "mdi:ray-start-arrow"
 ICON_COOLING = "mdi:snowflake"
 ICON_HUMIDITY = "mdi:water-percent"
+ICON_THERMOMETER_LINES = "mdi:thermometer-lines"
 
 # Platforms
 SENSOR = Platform.SENSOR
@@ -394,6 +395,19 @@ HERU_SENSORS = [
         "state_class": None,
         "entity_category": EntityCategory.DIAGNOSTIC,
         "register_type": DISCRETE_INPUTS,
+    },
+    {
+        "name": "Temperature regulation mode",
+        "modbus_address": "4x00012",
+        "address": 11,
+        "scale": None,
+        "icon": ICON_THERMOMETER_LINES,
+        "unit_of_measurement": None,
+        "device_class": SensorDeviceClass.ENUM,
+        "state_class": None,
+        "entity_category": None,
+        "register_type": HOLDING_REGISTERS,
+        "options": ["Supply", "Extract", "Room", "Extract S/W", "Room S/W"],
     },
     {
         "name": "Quality sensor 1 value",

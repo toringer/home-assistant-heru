@@ -15,6 +15,7 @@ from .const import (
     DISCRETE_INPUTS,
     DOMAIN,
     HERU_SENSORS,
+    HOLDING_REGISTERS,
     INPUT_REGISTERS,
 )
 from .entity import HeruEntity
@@ -70,6 +71,11 @@ class HeruSensor(HeruEntity, SensorEntity):
                 return STATE_OFF
             else:
                 return STATE_ON
+        if self.idx["register_type"] == HOLDING_REGISTERS:
+            value = self.coordinator.holding_registers[self.idx["address"]]
+            if self._attr_device_class == SensorDeviceClass.ENUM:
+                return self._attr_options[value]
+            raise TypeError(f"Unsupported register type for sensor: {self.idx['name']}")
 
     @callback
     def _handle_coordinator_update(self) -> None:
