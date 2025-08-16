@@ -3,7 +3,7 @@
 // Depending on setup, "remoteUser": "vscode", might be preferred to add.
 {
 	"name": "HERU",
-	"image": "mcr.microsoft.com/devcontainers/python:1-3.13",
+	"image": "mcr.microsoft.com/devcontainers/python:3.13",
 	"postCreateCommand": "scripts/setup",
 	"forwardPorts": [
 		8123
