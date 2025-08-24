@@ -24,6 +24,7 @@ ICON_THERMOSTAT = "mdi:home-thermometer"
 ICON_START = "mdi:ray-start-arrow"
 ICON_COOLING = "mdi:snowflake"
 ICON_THERMOMETER_LINES = "mdi:thermometer-lines"
+ICON_AIR_PURIFIER = "mdi:air-purifier"
 
 # Platforms
 SENSOR = Platform.SENSOR
@@ -390,6 +391,33 @@ HERU_SENSORS = [
         "state_class": None,
         "entity_category": None,
         "register_type": INPUT_REGISTERS_BINARY,
+    },
+    {
+        "name": "Quality sensor 1 type",
+        "modbus_address": "3x00041",
+        "address": 40,
+        "scale": None,
+        "icon": ICON_AIR_PURIFIER,
+        "unit_of_measurement": None,
+        "entity_category": None,
+        "device_class": SensorDeviceClass.ENUM,
+        "state_class": None,
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "register_type": INPUT_REGISTERS,
+        "options": ["None", "RH", "CO2", "VOC"],
+    },
+    {
+        "name": "Quality sensor 1 value",
+        "modbus_address": "3x00042",
+        "address": 41,
+        "scale": 0.1,
+        "icon": ICON_AIR_PURIFIER,
+        "unit_of_measurement": "V",
+        "entity_category": None,
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "entity_category": None,
+        "register_type": INPUT_REGISTERS,
     },
 ]
 

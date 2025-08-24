@@ -76,6 +76,11 @@ class HeruCoordinator(DataUpdateCoordinator):
                 for i, register in enumerate(result.registers):
                     input_address = f"3x{str(i + 1).zfill(5)}"
                     self._input_registers[input_address] = register
+                # 3x00041 - 3x00046
+                result = await self.client.read_input_registers(40, count=6, slave=DEFAULT_SLAVE)
+                for i, register in enumerate(result.registers):
+                    input_address = f"3x{str(i + 1).zfill(5)}"
+                    self._input_registers[input_address] = register
 
                 # 3x00041 - 3x00046 (addresses 40-45) - valid range
                 result = await self.client.read_input_registers(40, count=6, slave=DEFAULT_SLAVE)
