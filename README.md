@@ -51,6 +51,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Supply air temperature|3x00003|
 |Supply fan alarm|1x00021|
 |Temperature regulation mode|4x00012|
+|Changeover active|3x00034|
 
 
 ### Buttons
