@@ -17,6 +17,7 @@ from .const import (
     HERU_SENSORS,
     HOLDING_REGISTERS,
     INPUT_REGISTERS,
+    INPUT_REGISTERS_BINARY,
 )
 from .entity import HeruEntity
 
