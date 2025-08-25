@@ -47,6 +47,7 @@ CONF_DEVICE_NAME = "device_name"
 
 # Modbus register types
 INPUT_REGISTERS = "input_registers"
+INPUT_REGISTERS_BINARY = "input_registers_binary"
 DISCRETE_INPUTS = "discrete_inputs"
 HOLDING_REGISTERS = "holding_registers"
 COIL = "coil"
@@ -415,11 +416,10 @@ HERU_SENSORS = [
         "scale": None,
         "icon": ICON_CALENDAR,
         "unit_of_measurement": None,
-        "device_class": SensorDeviceClass.ENUM,
+        "device_class": None,
         "state_class": None,
         "entity_category": None,
-        "register_type": INPUT_REGISTERS,
-        "options": ["Off", "On"],
+        "register_type": INPUT_REGISTERS_BINARY,
     },
 ]
 

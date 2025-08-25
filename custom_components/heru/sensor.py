@@ -65,6 +65,12 @@ class HeruSensor(HeruEntity, SensorEntity):
             if self._attr_device_class == SensorDeviceClass.ENUM:
                 return self._attr_options[value]
             return value * self.idx["scale"]
+        if self.idx["register_type"] == INPUT_REGISTERS_BINARY:
+            value = self.coordinator.input_registers[self.idx["address"]]
+            if value == 0:
+                return STATE_OFF
+            else:
+                return STATE_ON
         if self.idx["register_type"] == DISCRETE_INPUTS:
             value = self.coordinator.discrete_inputs[self.idx["address"]]
             if value is False:
