@@ -22,6 +22,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 | Sensor  | Modbus register |
 | ------------- | ------------- |
 |Boost input|1x00002|
+|Changeover active|3x00034|
 |Current cooling power|3x00031|
 |Current exhaust fan control voltage|3x00033|
 |Current exhaust fan power|3x00026|
@@ -51,7 +52,6 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Supply air temperature|3x00003|
 |Supply fan alarm|1x00021|
 |Temperature regulation mode|4x00012|
-|Changeover active|3x00034|
 
 
 ### Buttons
