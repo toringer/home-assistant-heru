@@ -52,7 +52,7 @@ class HeruCoordinator(DataUpdateCoordinator):
                 self.discrete_inputs = discrete_inputs_result.bits
 
                 # 3x00001 - 3x00034
-                result = await self.client.read_input_registers(0, count=33, slave=DEFAULT_SLAVE)
+                result = await self.client.read_input_registers(0, count=34, slave=DEFAULT_SLAVE)
                 self.input_registers = result.registers
 
                 # 4x00001 - 4x00067

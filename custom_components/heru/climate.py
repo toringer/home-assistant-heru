@@ -81,12 +81,23 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         # - Mode 2 (Room): Use Room temperature (register 3x00008)
         # - Default: Fall back to supply air temperature
         regulation_mode = self.coordinator.holding_registers[11]
+        changeover = self.coordinator.input_registers[33]
         if regulation_mode == 0:  # Supply
             return self.coordinator.input_registers[2] * 0.1
         elif regulation_mode == 1:  # Extract
             return self.coordinator.input_registers[3] * 0.1
         elif regulation_mode == 2:  # Room
             return self.coordinator.input_registers[7] * 0.1
+        elif regulation_mode == 3:  # Extract S/W
+            if changeover == 1:
+                return self.coordinator.input_registers[2] * 0.1 # Supply
+            else:
+                return self.coordinator.input_registers[3] * 0.1 # Extract
+        elif regulation_mode == 4:  # Room S/W
+            if changeover == 1:
+                return self.coordinator.input_registers[2] * 0.1 # Supply
+            else:
+                return self.coordinator.input_registers[7] * 0.1 # Room
         else:
             return self.coordinator.input_registers[2] * 0.1  # Default to Supply
 
