@@ -36,6 +36,10 @@ async def async_setup_entry(
         sensors.append(HeruSensor(coordinator, sensor, entry))
     sensors.append(HeruLastSeenSensor(coordinator, entry))
     sensors.append(HeruRecycleEfficiencySensor(coordinator, entry))
+    for i in range(3):
+        sensors.append(HeruQualitySensor(coordinator, i+1, 1, entry))
+        sensors.append(HeruQualitySensor(coordinator, i+1, 2, entry))
+        sensors.append(HeruQualitySensor(coordinator, i+1, 3, entry))
     async_add_devices(sensors)
 
 
@@ -180,3 +184,67 @@ class HeruRecycleEfficiencySensor(HeruEntity, SensorEntity):
             self._attr_native_unit_of_measurement,
         )
         self.async_write_ha_state()
+
+class HeruQualitySensor(HeruEntity, SensorEntity):
+    """HeruQualitySensor class. Models the 3 possible quality sensors."""
+
+    def __init__(self, coordinator: CoordinatorEntity, index, value_type, config_entry):
+        _LOGGER.debug("HeruQualitySensor.__init__()")
+        idx = {
+            "name": "Quality sensor {} {} value".format(index, value_type),
+            "icon": "mdi:air-purifier",
+            "modbus_address": "3x0004{}".format(index*2-1),
+            "scale": 1.0,
+            "state_class": SensorStateClass.MEASUREMENT,
+            "entity_category": None,
+            "register_type": INPUT_REGISTERS,
+            "entity_registry_enabled_default": False,
+        }
+        if value_type == 1: # RH
+            idx["unit_of_measurement"] = "%"
+            idx["device_class"] = SensorDeviceClass.HUMIDITY
+        elif value_type == 2: # CO2
+            idx["unit_of_measurement"] = "ppm"
+            idx["device_class"] = SensorDeviceClass.CO2
+        elif value_type == 3: # VOC
+            idx["unit_of_measurement"] = "ppm"
+            idx["device_class"] = SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS_PARTS
+        else:
+            raise TypeError(f"Unsupported value_type for sensor: {self.idx['name']}")
+        super().__init__(coordinator, idx, config_entry)
+        self.coordinator = coordinator
+        self.value_type = value_type
+        self.sensor_index = index
+        self.idx = idx
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+        self._attr_native_unit_of_measurement = idx["unit_of_measurement"]
+        self._attr_native_value = self._get_value()
+
+    def _get_value(self):
+        """Get the value from the coordinator, but only if the sensor type matches configured."""
+
+        value = self.coordinator.get_register(self.idx["modbus_address"])
+
+        configured_type = ModbusClientMixin.convert_from_registers(
+            [self.coordinator.get_register("3x0004{}".format(self.sensor_index*2+2)],
+            ModbusClientMixin.DATATYPE.INT16)
+        if value and configured_type == self.value_type:
+            value = ModbusClientMixin.convert_from_registers(
+                [value],
+                ModbusClientMixin.DATATYPE.INT16) * self.idx["scale"]
+            return value;
+        return None
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        _LOGGER.debug("HeruQualitySensor._handle_coordinator_update()")
+        self._attr_native_value = self._get_value()
+        _LOGGER.debug(
+            "%s: %s %s",
+            self._attr_name,
+            self._attr_native_value,
+            self._attr_native_unit_of_measurement,
+        )
+        self.async_write_ha_state()
+        
