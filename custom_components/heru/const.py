@@ -61,7 +61,6 @@ HERU_SENSORS = [
     {
         "name": "Outdoor temperature",
         "modbus_address": "3x00002",
-        "address": 1,
         "scale": 0.1,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
@@ -73,7 +72,6 @@ HERU_SENSORS = [
     {
         "name": "Supply air temperature",
         "modbus_address": "3x00003",
-        "address": 2,
         "scale": 0.1,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
@@ -85,7 +83,6 @@ HERU_SENSORS = [
     {
         "name": "Extract air temperature",
         "modbus_address": "3x00004",
-        "address": 3,
         "scale": 0.1,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
@@ -97,7 +94,6 @@ HERU_SENSORS = [
     {
         "name": "Exhaust air temperature",
         "modbus_address": "3x00005",
-        "address": 4,
         "scale": 0.1,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
@@ -109,7 +105,6 @@ HERU_SENSORS = [
     {
         "name": "Heat recovery temperature",
         "modbus_address": "3x00007",
-        "address": 6,
         "scale": 0.1,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
@@ -121,7 +116,6 @@ HERU_SENSORS = [
     {
         "name": "Current exhaust fan power",
         "modbus_address": "3x00026",
-        "address": 25,
         "scale": 1,
         "icon": ICON_FAN,
         "unit_of_measurement": "%",
@@ -133,7 +127,6 @@ HERU_SENSORS = [
     {
         "name": "Current exhaust fan speed",
         "modbus_address": "3x00028",
-        "address": 27,
         "scale": 1,
         "icon": ICON_FAN,
         "unit_of_measurement": "rpm",
@@ -145,7 +138,6 @@ HERU_SENSORS = [
     {
         "name": "Current exhaust fan control voltage",
         "modbus_address": "3x00033",
-        "address": 32,
         "scale": 0.1,
         "icon": ICON_FAN,
         "unit_of_measurement": "V",
@@ -157,7 +149,6 @@ HERU_SENSORS = [
     {
         "name": "Current heating power",
         "modbus_address": "3x00029",
-        "address": 28,
         "scale": 0.3921568627,
         "icon": ICON_HEAT_WAVE,
         "unit_of_measurement": "%",
@@ -169,7 +160,6 @@ HERU_SENSORS = [
     {
         "name": "Current cooling power",
         "modbus_address": "3x00031",
-        "address": 30,
         "scale": 0.3921568627,
         "icon": ICON_HEAT_WAVE,
         "unit_of_measurement": "%",
@@ -181,7 +171,6 @@ HERU_SENSORS = [
     {
         "name": "Current supply fan power",
         "modbus_address": "3x00025",
-        "address": 24,
         "scale": 1,
         "icon": ICON_FAN,
         "unit_of_measurement": "%",
@@ -193,7 +182,6 @@ HERU_SENSORS = [
     {
         "name": "Current supply fan speed",
         "modbus_address": "3x00027",
-        "address": 26,
         "scale": 1,
         "icon": ICON_FAN,
         "unit_of_measurement": "rpm",
@@ -205,7 +193,6 @@ HERU_SENSORS = [
     {
         "name": "Current supply fan control voltage",
         "modbus_address": "3x00032",
-        "address": 31,
         "scale": 0.1,
         "icon": ICON_FAN,
         "unit_of_measurement": "V",
@@ -217,7 +204,6 @@ HERU_SENSORS = [
     {
         "name": "Current heat/cold recovery power",
         "modbus_address": "3x00030",
-        "address": 29,
         "scale": 0.3921568627,
         "icon": ICON_EXCHANGE,
         "unit_of_measurement": "%",
@@ -229,7 +215,6 @@ HERU_SENSORS = [
     {
         "name": "Night cooling active",
         "modbus_address": "1x00038",
-        "address": 37,
         "scale": None,
         "icon": ICON_COOLING,
         "unit_of_measurement": None,
@@ -241,7 +226,6 @@ HERU_SENSORS = [
     {
         "name": "Filter timer alarm",
         "modbus_address": "1x00025",
-        "address": 24,
         "scale": None,
         "icon": ICON_ALARM,
         "unit_of_measurement": None,
@@ -253,7 +237,6 @@ HERU_SENSORS = [
     {
         "name": "Exhaust fan alarm",
         "modbus_address": "1x00022",
-        "address": 21,
         "scale": None,
         "icon": ICON_ALARM,
         "unit_of_measurement": None,
@@ -265,7 +248,6 @@ HERU_SENSORS = [
     {
         "name": "Boost input",
         "modbus_address": "1x00002",
-        "address": 1,
         "scale": None,
         "icon": ICON_SWITCH,
         "unit_of_measurement": None,
@@ -277,7 +259,6 @@ HERU_SENSORS = [
     {
         "name": "Overpressure input",
         "modbus_address": "1x00003",
-        "address": 2,
         "scale": None,
         "icon": ICON_SWITCH,
         "unit_of_measurement": None,
@@ -289,7 +270,6 @@ HERU_SENSORS = [
     {
         "name": "Fire alarm",
         "modbus_address": "1x00010",
-        "address": 9,
         "scale": None,
         "icon": ICON_ALARM,
         "unit_of_measurement": None,
@@ -301,7 +281,6 @@ HERU_SENSORS = [
     {
         "name": "Rotor alarm",
         "modbus_address": "1x00011",
-        "address": 10,
         "scale": None,
         "icon": ICON_ALARM,
         "unit_of_measurement": None,
@@ -313,7 +292,6 @@ HERU_SENSORS = [
     {
         "name": "Supply fan alarm",
         "modbus_address": "1x00021",
-        "address": 20,
         "scale": None,
         "icon": ICON_ALARM,
         "unit_of_measurement": None,
@@ -325,7 +303,6 @@ HERU_SENSORS = [
     {
         "name": "Current supply fan step",
         "modbus_address": "3x00023",
-        "address": 22,
         "scale": None,
         "icon": ICON_FAN,
         "unit_of_measurement": None,
@@ -338,7 +315,6 @@ HERU_SENSORS = [
     {
         "name": "Current exhaust fan step",
         "modbus_address": "3x00024",
-        "address": 23,
         "scale": None,
         "icon": ICON_FAN,
         "unit_of_measurement": None,
@@ -351,7 +327,6 @@ HERU_SENSORS = [
     {
         "name": "Filter days left",
         "modbus_address": "3x00020",
-        "address": 19,
         "scale": 1,
         "icon": ICON_CALENDAR,
         "unit_of_measurement": "days",
@@ -363,7 +338,6 @@ HERU_SENSORS = [
     {
         "name": "Startup 1st phase",
         "modbus_address": "1x00028",
-        "address": 27,
         "scale": None,
         "icon": ICON_START,
         "unit_of_measurement": None,
@@ -375,7 +349,6 @@ HERU_SENSORS = [
     {
         "name": "Startup 2nd phase",
         "modbus_address": "1x00029",
-        "address": 28,
         "scale": None,
         "icon": ICON_START,
         "unit_of_measurement": None,
@@ -387,7 +360,6 @@ HERU_SENSORS = [
     {
         "name": "Cooling alarm",
         "modbus_address": "1x00032",
-        "address": 31,
         "scale": None,
         "icon": ICON_ALARM,
         "unit_of_measurement": None,
@@ -399,7 +371,6 @@ HERU_SENSORS = [
     {
         "name": "Temperature regulation mode",
         "modbus_address": "4x00012",
-        "address": 11,
         "scale": None,
         "icon": ICON_THERMOMETER_LINES,
         "unit_of_measurement": None,
@@ -412,7 +383,6 @@ HERU_SENSORS = [
     {
         "name": "Changeover active",
         "modbus_address": "3x00034",
-        "address": 33,
         "scale": None,
         "icon": ICON_CALENDAR,
         "unit_of_measurement": None,
@@ -428,7 +398,6 @@ HERU_NUMBERS = [
     {
         "name": "Night cooling indoor-outdoor diff. limit",
         "modbus_address": "4x00020",
-        "address": 19,
         "scale": 0.1,
         "min_value": 1,
         "max_value": 10,
@@ -438,7 +407,6 @@ HERU_NUMBERS = [
     {
         "name": "Night cooling exhaust high limit",
         "modbus_address": "4x00021",
-        "address": 20,
         "scale": 1,
         "min_value": 18,
         "max_value": 24,
@@ -448,7 +416,6 @@ HERU_NUMBERS = [
     {
         "name": "Night cooling exhaust low limit",
         "modbus_address": "4x00022",
-        "address": 21,
         "scale": 1,
         "min_value": 19,
         "max_value": 26,
@@ -462,21 +429,18 @@ HERU_BUTTONS = [
     {
         "name": "Clear Alarms",
         "modbus_address": "0x00005",
-        "address": 4,
         "icon": ICON_PLAY,
         "entity_class": BUTTON_CLASS_START,
     },
     {
         "name": "Reset filter timer",
         "modbus_address": "0x00006",
-        "address": 5,
         "icon": ICON_PLAY,
         "entity_class": BUTTON_CLASS_START,
     },
     {
         "name": "Sync date and time",
         "modbus_address": "4x00400",
-        "address": 0,
         "icon": ICON_TIME_SYNC,
         "entity_class": BUTTON_CLASS_SET_TIME,
     },
@@ -487,56 +451,48 @@ HERU_SWITCHES = [
     {
         "name": "Power",
         "modbus_address": "0x00001",
-        "address": 0,
         "icon": ICON_SWITCH,
         "register_type": COIL,
     },
     {
         "name": "Overpressure mode",
         "modbus_address": "0x00002",
-        "address": 1,
         "icon": ICON_SWITCH,
         "register_type": COIL,
     },
     {
         "name": "Boost mode",
         "modbus_address": "0x00003",
-        "address": 2,
         "icon": ICON_SWITCH,
         "register_type": COIL,
     },
     {
         "name": "Away mode",
         "modbus_address": "0x00004",
-        "address": 3,
         "icon": ICON_SWITCH,
         "register_type": COIL,
     },
     {
         "name": "Preheater enabled",
         "modbus_address": "4x00064",
-        "address": 63,
         "icon": ICON_SWITCH,
         "register_type": HOLDING_REGISTERS,
     },
     {
         "name": "Heater enabled",
         "modbus_address": "4x00067",
-        "address": 66,
         "icon": ICON_SWITCH,
         "register_type": HOLDING_REGISTERS,
     },
     {
         "name": "Night cooling enabled",
         "modbus_address": "4x00019",
-        "address": 18,
         "icon": ICON_COOLING,
         "register_type": HOLDING_REGISTERS,
     },
     {
         "name": "Cooler enabled",
         "modbus_address": "4x00069",
-        "address": 68,
         "icon": ICON_COOLING,
         "register_type": HOLDING_REGISTERS,
     },
@@ -548,6 +504,5 @@ HERU_CLIMATES = [
         "name": "Comfort",
         "modbus_address": "4x00002",
         "icon": ICON_THERMOSTAT,
-        "address": 1,
     }
 ]

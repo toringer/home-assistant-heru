@@ -43,10 +43,7 @@ class HeruSwitch(HeruEntity, SwitchEntity):
 
     def _get_value(self):
         """Get the value from the coordinator"""
-        if self.idx["register_type"] == COIL:
-            return self.coordinator.coils[self.idx["address"]]
-        if self.idx["register_type"] == HOLDING_REGISTERS:
-            return self.coordinator.holding_registers[self.idx["address"]]
+        return self.coordinator.get_register(self.idx["modbus_address"])
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -64,16 +61,16 @@ class HeruSwitch(HeruEntity, SwitchEntity):
         """Turn the entity on."""
         _LOGGER.debug("HeruSwitch.async_turn_on()")
         if self.idx["register_type"] == COIL:
-            result = await self.coordinator.write_coil(self.idx["address"], True)
+            result = await self.coordinator.write_coil_by_address(self.idx["modbus_address"], True)
         elif self.idx["register_type"] == HOLDING_REGISTERS:
-            result = await self.coordinator.write_register(self.idx["address"], 1)
+            result = await self.coordinator.write_register_by_address(self.idx["modbus_address"], 1)
         _LOGGER.debug("async_turn_on: %s", result)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
         _LOGGER.debug("HeruSwitch.async_turn_off()")
         if self.idx["register_type"] == COIL:
-            result = await self.coordinator.write_coil(self.idx["address"], False)
+            result = await self.coordinator.write_coil_by_address(self.idx["modbus_address"], False)
         elif self.idx["register_type"] == HOLDING_REGISTERS:
-            result = await self.coordinator.write_register(self.idx["address"], 0)
+            result = await self.coordinator.write_register_by_address(self.idx["modbus_address"], 0)
         _LOGGER.debug("async_turn_off: %s", result)

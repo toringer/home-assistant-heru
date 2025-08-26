@@ -48,7 +48,7 @@ class HeruButtonStart(HeruButton):
     async def async_press(self) -> None:
         """Press the button."""
         _LOGGER.debug("HeruButtonStart.async_press()")
-        result = await self.coordinator.write_coil(self.idx["address"], True)
+        result = await self.coordinator.write_coil_by_address(self.idx["modbus_address"], True)
         _LOGGER.debug("async_press: %s", result)
 
 
@@ -60,9 +60,9 @@ class HeruButtonSetTime(HeruButton):
         _LOGGER.debug("HeruButtonSetTime.async_press()")
 
         now = hass_now()
-        await self.coordinator.write_register(399, now.year)
-        await self.coordinator.write_register(400, now.month)
-        await self.coordinator.write_register(401, now.day)
-        await self.coordinator.write_register(402, now.hour)
-        await self.coordinator.write_register(403, now.minute)
-        await self.coordinator.write_register(404, now.second)
+        await self.coordinator.write_register_by_address("4x00400", now.year)
+        await self.coordinator.write_register_by_address("4x00401", now.month)
+        await self.coordinator.write_register_by_address("4x00402", now.day)
+        await self.coordinator.write_register_by_address("4x00403", now.hour)
+        await self.coordinator.write_register_by_address("4x00404", now.minute)
+        await self.coordinator.write_register_by_address("4x00405", now.second)

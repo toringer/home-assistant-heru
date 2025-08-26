@@ -59,27 +59,28 @@ class HeruSensor(HeruEntity, SensorEntity):
 
     def _get_value(self):
         """Get the value from the coordinator"""
+        value = self.coordinator.get_register(self.idx["modbus_address"])
+
+        if value is None:
+            return None
+
         if self.idx["register_type"] == INPUT_REGISTERS:
-            value = self.coordinator.input_registers[self.idx["address"]]
             value = ModbusClientMixin.convert_from_registers([value], ModbusClientMixin.DATATYPE.INT16)
 
             if self._attr_device_class == SensorDeviceClass.ENUM:
                 return self._attr_options[value]
             return value * self.idx["scale"]
         if self.idx["register_type"] == INPUT_REGISTERS_BINARY:
-            value = self.coordinator.input_registers[self.idx["address"]]
             if value == 0:
                 return STATE_OFF
             else:
                 return STATE_ON
         if self.idx["register_type"] == DISCRETE_INPUTS:
-            value = self.coordinator.discrete_inputs[self.idx["address"]]
             if value is False:
                 return STATE_OFF
             else:
                 return STATE_ON
         if self.idx["register_type"] == HOLDING_REGISTERS:
-            value = self.coordinator.holding_registers[self.idx["address"]]
             if self._attr_device_class == SensorDeviceClass.ENUM:
                 return self._attr_options[value]
             raise TypeError(f"Unsupported register type for sensor: {self.idx['name']}")
@@ -152,9 +153,9 @@ class HeruRecycleEfficiencySensor(HeruEntity, SensorEntity):
 
     def _get_value(self):
         """Get the value from the coordinator"""
-        heat_recovery_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.input_registers[6]], ModbusClientMixin.DATATYPE.INT16) * 0.1
-        outdoor_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.input_registers[1]], ModbusClientMixin.DATATYPE.INT16) * 0.1
-        extract_air_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.input_registers[3]], ModbusClientMixin.DATATYPE.INT16) * 0.1
+        heat_recovery_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.get_register("3x00007")], ModbusClientMixin.DATATYPE.INT16) * 0.1
+        outdoor_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.get_register("3x00002")], ModbusClientMixin.DATATYPE.INT16) * 0.1
+        extract_air_temperature = ModbusClientMixin.convert_from_registers([self.coordinator.get_register("3x00004")], ModbusClientMixin.DATATYPE.INT16) * 0.1
         _LOGGER.debug(
             "Recycle efficiency: %s, %s, %s",
             heat_recovery_temperature,

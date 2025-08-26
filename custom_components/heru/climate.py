@@ -80,45 +80,44 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         # - Mode 1 (Extract): Use extract air temperature (register 3x00004)
         # - Mode 2 (Room): Use Room temperature (register 3x00008)
         # - Default: Fall back to supply air temperature
-        regulation_mode = self.coordinator.holding_registers[11]
-        changeover = self.coordinator.input_registers[33]
+        regulation_mode = self.coordinator.get_register("4x00012")
+        changeover = self.coordinator.get_register("3x00034")
         if regulation_mode == 0:  # Supply
-            return self.coordinator.input_registers[2] * 0.1
+            return self.coordinator.get_register("3x00003") * 0.1
         elif regulation_mode == 1:  # Extract
-            return self.coordinator.input_registers[3] * 0.1
+            return self.coordinator.get_register("3x00004") * 0.1
         elif regulation_mode == 2:  # Room
-            return self.coordinator.input_registers[7] * 0.1
+            return self.coordinator.get_register("3x00008") * 0.1
         elif regulation_mode == 3:  # Extract S/W
             if changeover == 1:
-                return self.coordinator.input_registers[2] * 0.1 # Supply
+                return self.coordinator.get_register("3x00003") * 0.1  # Supply
             else:
-                return self.coordinator.input_registers[3] * 0.1 # Extract
+                return self.coordinator.get_register("3x00004") * 0.1  # Extract
         elif regulation_mode == 4:  # Room S/W
             if changeover == 1:
-                return self.coordinator.input_registers[2] * 0.1 # Supply
+                return self.coordinator.get_register("3x00003") * 0.1  # Supply
             else:
-                return self.coordinator.input_registers[7] * 0.1 # Room
+                return self.coordinator.get_register("3x00008") * 0.1  # Room
         else:
-            return self.coordinator.input_registers[2] * 0.1  # Default to Supply
+            return self.coordinator.get_register("3x00003") * 0.1  # Default to Supply
 
     def _get_target_temperature(self):
         """Get the value from the coordinator"""
-        return self.coordinator.holding_registers[self.idx["address"]]
+        return self.coordinator.get_register(self.idx["modbus_address"])
 
     def _get_hvac_action(self):
-        action = self.coordinator.input_registers[28]
+        action = self.coordinator.get_register("3x00029")
         if action == 0:
             return HVACAction.FAN
         else:
             return HVACAction.HEATING
 
-    def _get_hvac_mode (self):
-        action = self.coordinator.coils[0]
+    def _get_hvac_mode(self):
+        action = self.coordinator.get_register("0x00001")
         if action == False:
             return HVACMode.OFF
         else:
             return HVACMode.HEAT
-
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -145,9 +144,9 @@ class HeruThermostat(HeruEntity, ClimateEntity):
             hvac_mode,
         )
         if hvac_mode == HVACMode.HEAT:
-            await self.coordinator.write_coil(0, True)
+            await self.coordinator.write_coil_by_address("0x00001", True)
         elif hvac_mode == HVACMode.OFF:
-            await self.coordinator.write_coil(0, False)
+            await self.coordinator.write_coil_by_address("0x00001", False)
         await self.coordinator.async_request_refresh()
 
     async def async_turn_on(self):
@@ -168,4 +167,4 @@ class HeruThermostat(HeruEntity, ClimateEntity):
             "Set point: %s",
             target_temperature,
         )
-        await self.coordinator.write_register(1, target_temperature)
+        await self.coordinator.write_register_by_address("4x00001", target_temperature)

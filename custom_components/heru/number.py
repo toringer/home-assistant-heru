@@ -35,7 +35,7 @@ class HeruNumber(HeruEntity, NumberEntity):
         _LOGGER.debug("HeruNumber.__init__()")
         super().__init__(coordinator, idx, config_entry)
         self.coordinator = coordinator
-        self.address = self.idx["address"]
+        self.modbus_address = self.idx["modbus_address"]
         self.scale = self.idx["scale"]
         self._attr_native_value = 0
         self._attr_native_step = 1
@@ -43,7 +43,7 @@ class HeruNumber(HeruEntity, NumberEntity):
         self._attr_native_max_value = idx["max_value"]
         self._attr_native_unit_of_measurement = self.idx["unit_of_measurement"]
         self._attr_native_value = (
-            self.coordinator.holding_registers[self.address] * self.scale
+            self.coordinator.get_register(self.idx["modbus_address"]) * self.scale
         )
 
     @callback
@@ -51,7 +51,7 @@ class HeruNumber(HeruEntity, NumberEntity):
         """Handle updated data from the coordinator."""
         _LOGGER.debug("HeruNumber._handle_coordinator_update()")
         self._attr_native_value = (
-            self.coordinator.holding_registers[self.address] * self.scale
+            self.coordinator.get_register(self.idx["modbus_address"]) * self.scale
         )
         _LOGGER.debug(
             "%s: %s %s",
@@ -65,4 +65,4 @@ class HeruNumber(HeruEntity, NumberEntity):
         """Update the current value."""
         _LOGGER.debug("HeruButton.async_set_native_value()")
         native_value = int(value / self.scale)
-        await self.coordinator.write_register(self.address, native_value)
+        await self.coordinator.write_register_by_address(self.modbus_address, native_value)
