@@ -39,11 +39,13 @@ class HeruSwitch(HeruEntity, SwitchEntity):
         super().__init__(coordinator, idx, entry)
         self.idx = idx
         self.coordinator = coordinator
+        self.modbus_address = self.idx["modbus_address"]
+        self.register_type = self.idx["register_type"]
         self._attr_is_on = self._get_value()
 
     def _get_value(self):
         """Get the value from the coordinator"""
-        return self.coordinator.get_register(self.idx["modbus_address"])
+        return self.coordinator.get_register(self.modbus_address)
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -60,17 +62,17 @@ class HeruSwitch(HeruEntity, SwitchEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the entity on."""
         _LOGGER.debug("HeruSwitch.async_turn_on()")
-        if self.idx["register_type"] == COIL:
-            result = await self.coordinator.write_coil_by_address(self.idx["modbus_address"], True)
-        elif self.idx["register_type"] == HOLDING_REGISTERS:
-            result = await self.coordinator.write_register_by_address(self.idx["modbus_address"], 1)
+        if self.register_type == COIL:
+            result = await self.coordinator.write_coil_by_address(self.modbus_address, True)
+        elif self.register_type == HOLDING_REGISTERS:
+            result = await self.coordinator.write_register_by_address(self.modbus_address, 1)
         _LOGGER.debug("async_turn_on: %s", result)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
         _LOGGER.debug("HeruSwitch.async_turn_off()")
-        if self.idx["register_type"] == COIL:
-            result = await self.coordinator.write_coil_by_address(self.idx["modbus_address"], False)
-        elif self.idx["register_type"] == HOLDING_REGISTERS:
-            result = await self.coordinator.write_register_by_address(self.idx["modbus_address"], 0)
+        if self.register_type == COIL:
+            result = await self.coordinator.write_coil_by_address(self.modbus_address, False)
+        elif self.register_type == HOLDING_REGISTERS:
+            result = await self.coordinator.write_register_by_address(self.modbus_address, 0)
         _LOGGER.debug("async_turn_off: %s", result)

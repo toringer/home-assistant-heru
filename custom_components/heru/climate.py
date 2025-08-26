@@ -54,6 +54,7 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         super().__init__(coordinator, idx, config_entry)
         self.coordinator = coordinator
         self.idx = idx
+        self.modbus_address = self.idx["modbus_address"]
 
         self._attr_min_temp = 15
         self._attr_max_temp = 30
@@ -103,7 +104,7 @@ class HeruThermostat(HeruEntity, ClimateEntity):
 
     def _get_target_temperature(self):
         """Get the value from the coordinator"""
-        return self.coordinator.get_register(self.idx["modbus_address"])
+        return self.coordinator.get_register(self.modbus_address)
 
     def _get_hvac_action(self):
         action = self.coordinator.get_register("3x00029")

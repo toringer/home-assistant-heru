@@ -43,7 +43,7 @@ class HeruNumber(HeruEntity, NumberEntity):
         self._attr_native_max_value = idx["max_value"]
         self._attr_native_unit_of_measurement = self.idx["unit_of_measurement"]
         self._attr_native_value = (
-            self.coordinator.get_register(self.idx["modbus_address"]) * self.scale
+            self.coordinator.get_register(self.modbus_address) * self.scale
         )
 
     @callback
@@ -51,7 +51,7 @@ class HeruNumber(HeruEntity, NumberEntity):
         """Handle updated data from the coordinator."""
         _LOGGER.debug("HeruNumber._handle_coordinator_update()")
         self._attr_native_value = (
-            self.coordinator.get_register(self.idx["modbus_address"]) * self.scale
+            self.coordinator.get_register(self.modbus_address) * self.scale
         )
         _LOGGER.debug(
             "%s: %s %s",

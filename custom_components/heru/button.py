@@ -40,6 +40,7 @@ class HeruButton(HeruEntity, ButtonEntity):
         super().__init__(coordinator, idx, entry)
         self.coordinator = coordinator
         self.idx = idx
+        self.modbus_address = self.idx["modbus_address"]
 
 
 class HeruButtonStart(HeruButton):
@@ -48,7 +49,7 @@ class HeruButtonStart(HeruButton):
     async def async_press(self) -> None:
         """Press the button."""
         _LOGGER.debug("HeruButtonStart.async_press()")
-        result = await self.coordinator.write_coil_by_address(self.idx["modbus_address"], True)
+        result = await self.coordinator.write_coil_by_address(self.modbus_address, True)
         _LOGGER.debug("async_press: %s", result)
 
 
