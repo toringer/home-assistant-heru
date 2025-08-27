@@ -66,6 +66,8 @@ class HeruSwitch(HeruEntity, SwitchEntity):
             result = await self.coordinator.write_coil_by_address(self.modbus_address, True)
         elif self.register_type == HOLDING_REGISTERS:
             result = await self.coordinator.write_register_by_address(self.modbus_address, 1)
+        self._attr_is_on = True
+        self.async_write_ha_state()
         _LOGGER.debug("async_turn_on: %s", result)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
@@ -75,4 +77,6 @@ class HeruSwitch(HeruEntity, SwitchEntity):
             result = await self.coordinator.write_coil_by_address(self.modbus_address, False)
         elif self.register_type == HOLDING_REGISTERS:
             result = await self.coordinator.write_register_by_address(self.modbus_address, 0)
+        self._attr_is_on = False
+        self.async_write_ha_state()
         _LOGGER.debug("async_turn_off: %s", result)
