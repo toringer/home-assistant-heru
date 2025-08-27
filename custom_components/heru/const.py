@@ -2,6 +2,7 @@
 
 from homeassistant.const import Platform
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
+from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.helpers.entity import EntityCategory
 
 NAME = "HERU"
@@ -32,7 +33,8 @@ BUTTON = Platform.BUTTON
 NUMBER = Platform.NUMBER
 SELECT = Platform.SELECT
 CLIMATE = Platform.CLIMATE
-PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE, NUMBER]
+BINARY_SENSOR = Platform.BINARY_SENSOR
+PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE, NUMBER, BINARY_SENSOR]
 # PLATFORMS = [SWITCH, SENSOR, BUTTON, NUMBER, SELECT]
 
 # Modbus
@@ -391,6 +393,18 @@ HERU_SENSORS = [
         "entity_category": None,
         "register_type": INPUT_REGISTERS_BINARY,
     },
+]
+
+
+HERU_BINARY_SENSORS = [
+    #     {
+    #     "name": "NAME",
+    #     "modbus_address": "9x99999",
+    #     "icon": ICON,
+    #     "device_class": BinarySensorDeviceClass.RUNNING,
+    #     "entity_category": EntityCategory.DIAGNOSTIC,
+    #     "register_type": DISCRETE_INPUTS,
+    # },
 ]
 
 
