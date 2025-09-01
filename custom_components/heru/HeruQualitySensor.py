@@ -32,18 +32,19 @@ class HeruQualitySensor(HeruEntity, SensorEntity):
         _LOGGER.debug("HeruQualitySensor.__init__()")
         idx = {
             "name": name,
-            "icon": "mdi:air-purifier",
+            "icon": None,
             "modbus_address": type_modbus_Address,
             "scale": 1.0,
             "state_class": SensorStateClass.MEASUREMENT,
             "entity_category": None,
             "register_type": INPUT_REGISTERS,
-            "entity_registry_enabled_default": False,
         }
 
         super().__init__(coordinator, idx, config_entry)
         self.coordinator = coordinator
-        self.value_type = coordinator.get_register(type_modbus_Address)
+        self.value_type = ModbusClientMixin.convert_from_registers(
+            [coordinator.get_register(type_modbus_Address)],
+            ModbusClientMixin.DATATYPE.INT16)
         self.idx = idx
         self.value_modbus_Address = value_modbus_Address
         self._attr_state_class = SensorStateClass.MEASUREMENT
@@ -51,31 +52,32 @@ class HeruQualitySensor(HeruEntity, SensorEntity):
         self._attr_native_value = self._get_value()
 
         if self.value_type == 0:  # None
+            self._attr_native_unit_of_measurement = None
             self._attr_entity_registry_enabled_default = False
         elif self.value_type == 1:  # RH
             self._attr_native_unit_of_measurement = "%"
             self._attr_device_class = SensorDeviceClass.HUMIDITY
+            self._attr_entity_registry_enabled_default = True
         elif self.value_type == 2:  # CO2
             self._attr_native_unit_of_measurement = "ppm"
             self._attr_device_class = SensorDeviceClass.CO2
+            self._attr_entity_registry_enabled_default = True
         elif self.value_type == 3:  # VOC
             self._attr_native_unit_of_measurement = "ppm"
             self._attr_device_class = SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS_PARTS
+            self._attr_entity_registry_enabled_default = True
         else:
             raise TypeError(f"Unsupported value_type for sensor: {self.idx['name']}")
 
     def _get_value(self):
         """Get the value from the coordinator, but only if the sensor type matches configured."""
 
-        # value = self.coordinator.get_register(self.idx["modbus_address"])
-        return self.coordinator.get_register(self.value_modbus_Address)
-
         configured_type = ModbusClientMixin.convert_from_registers(
-            self.coordinator.get_register("3x0004{}".format(self.sensor_index * 2 + 2)),
+            [self.coordinator.get_register(self.idx["modbus_address"])],
             ModbusClientMixin.DATATYPE.INT16)
-        if value and configured_type == self.value_type:
+        if self.value_type and configured_type == self.value_type:
             value = ModbusClientMixin.convert_from_registers(
-                [value],
+                [self.coordinator.get_register(self.value_modbus_Address)],
                 ModbusClientMixin.DATATYPE.INT16) * self.idx["scale"]
             return value
         return None
