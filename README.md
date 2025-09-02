@@ -45,7 +45,9 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Night cooling active|1x00038|
 |Outdoor temperature | 3x00002  |
 |Overpressure input|1x00003|
-|Quality sensor 1|3x00042|
+|Quality sensor 1[^1]|3x00042|
+|Quality sensor 2[^1]|3x00044|
+|Quality sensor 3[^1]|3x00046|
 |Recycle efficiency|_Calculated_|
 |Rotor alarm|1x00011|
 |Startup 1st phase|1x00028|
@@ -54,6 +56,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Supply fan alarm|1x00021|
 |Temperature regulation mode|4x00012|
 
+[^1]: When a physical quality sensors is installed in the HERU, the Home Assistant component must be reloaded to allow the sensors unit of measurements to be reset.
 
 ### Buttons
 | Button  | Modbus register |
