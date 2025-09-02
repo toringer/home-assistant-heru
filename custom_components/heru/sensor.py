@@ -11,6 +11,8 @@ from homeassistant.util import dt as dt_util
 
 from pymodbus.client.mixin import ModbusClientMixin
 
+from custom_components.heru.HeruQualitySensor import HeruQualitySensor
+
 from .const import (
     DISCRETE_INPUTS,
     DOMAIN,
@@ -36,6 +38,9 @@ async def async_setup_entry(
         sensors.append(HeruSensor(coordinator, sensor, entry))
     sensors.append(HeruLastSeenSensor(coordinator, entry))
     sensors.append(HeruRecycleEfficiencySensor(coordinator, entry))
+    sensors.append(HeruQualitySensor(coordinator, "Quality sensor 1", "3x00041", "3x00042", entry))
+    sensors.append(HeruQualitySensor(coordinator, "Quality sensor 2", "3x00043", "3x00044", entry))
+    sensors.append(HeruQualitySensor(coordinator, "Quality sensor 3", "3x00045", "3x00046", entry))
     async_add_devices(sensors)
 
 

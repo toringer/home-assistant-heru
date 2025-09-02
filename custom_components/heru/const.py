@@ -25,6 +25,7 @@ ICON_THERMOSTAT = "mdi:home-thermometer"
 ICON_START = "mdi:ray-start-arrow"
 ICON_COOLING = "mdi:snowflake"
 ICON_THERMOMETER_LINES = "mdi:thermometer-lines"
+ICON_AIR_PURIFIER = "mdi:air-purifier"
 
 # Platforms
 SENSOR = Platform.SENSOR
