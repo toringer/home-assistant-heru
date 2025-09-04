@@ -168,4 +168,4 @@ class HeruThermostat(HeruEntity, ClimateEntity):
             "Set point: %s",
             target_temperature,
         )
-        await self.coordinator.write_register_by_address("4x00001", target_temperature)
+        await self.coordinator.write_register_by_address("4x00002", target_temperature)
