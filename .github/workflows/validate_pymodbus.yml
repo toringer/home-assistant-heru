@@ -1,0 +1,100 @@
+name: Validate pymodbus Dependency
+
+on:
+  push:
+    branches: [ main, master, dev ]
+  pull_request:
+    branches: [ main, master, dev ]
+  schedule:
+    # Run the last dat of the month
+    - cron: '0 0 31 * *' # At 00:00 UTC on day-of-month 31 (which resolves to the last day)
+  workflow_dispatch:
+
+jobs:
+  validate-pymodbus:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests packaging
+
+      - name: Validate pymodbus Version
+        run: |
+          python << 'EOF'
+          import json
+          import requests
+          import re
+          from packaging import version
+          from packaging.specifiers import SpecifierSet
+
+          def extract_pymodbus_version(content):
+              """Extract pymodbus version from requirements content using regex."""
+              # Regex pattern to match pymodbus with any version specifier
+              pattern = r'pymodbus\s*([><=!]+)\s*([0-9]+\.[0-9]+(?:\.[0-9]+)?(?:[a-zA-Z0-9]*)?)'
+              match = re.search(pattern, content, re.IGNORECASE)
+              if match:
+                  return match.group(2).strip()  # Return just the version number
+              return None
+
+          try:
+              # Load manifest.json
+              with open('custom_components/heru/manifest.json') as f:
+                  manifest = json.load(f)
+
+              manifest_pymodbus = None
+              for req in manifest.get('requirements', []):
+                  if 'pymodbus' in req:
+                      manifest_pymodbus = req
+                      break
+
+              # Load requirements_dev.txt
+              with open('requirements_dev.txt') as f:
+                  requirements_dev_content = f.read()
+
+              # Fetch requirements_all.txt from Home Assistant's dev branch
+              print("Fetching Home Assistant core requirements...")
+              url = 'https://raw.githubusercontent.com/home-assistant/core/dev/requirements_all.txt'
+              response = requests.get(url)
+              response.raise_for_status()
+              requirements_all_content = response.text
+
+              # Extract versions
+              manifest_version = extract_pymodbus_version(manifest_pymodbus)
+              requirements_dev_version = extract_pymodbus_version(requirements_dev_content)
+              core_version = extract_pymodbus_version(requirements_all_content)
+
+              print(f"Found pymodbus versions:")
+              print(f"  manifest.json: {manifest_pymodbus} -> {manifest_version}")
+              print(f"  requirements_dev.txt: {requirements_dev_version}")
+              print(f"  Home Assistant core: {core_version}")
+
+              # Check if all versions were found
+              if not all([manifest_version, requirements_dev_version, core_version]):
+                  print("ERROR: Could not extract pymodbus version from all files")
+                  exit(1)
+
+              # Simple equals check - all versions must match the core version
+              if manifest_version != core_version or requirements_dev_version != core_version:
+                  print("ERROR: pymodbus version mismatch detected!")
+                  print(f"Home Assistant core version: {core_version}")
+                  print(f"Your manifest.json version: {manifest_version}")
+                  print(f"Your requirements_dev.txt version: {requirements_dev_version}")
+                  print()
+                  print("Please update your pymodbus dependency to exactly match Home Assistant core version.")
+                  exit(1)
+              else:
+                  print("✅ pymodbus versions match Home Assistant core requirements.")
+                  print(f"All versions are: {core_version}")
+
+          except Exception as e:
+              print(f"ERROR: Failed to validate pymodbus dependency: {e}")
+              exit(1)
+          EOF
