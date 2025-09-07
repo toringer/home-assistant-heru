@@ -1,4 +1,4 @@
-name: Validate pymodbus Dependency
+name: Validate pymodbus dependency in the HA core repository
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [ main, master, dev ]
   schedule:
-    # Run the last dat of the month
-    - cron: '0 0 31 * *' # At 00:00 UTC on day-of-month 31 (which resolves to the last day)
+    - cron: '0 0 31 * *' # At 00:00 UTC on last day of the month (31 which resolves to the last day)
+    - cron: '0 0 * * 0' # At 00:00 UTC on every Sunday
   workflow_dispatch:
 
 jobs:
