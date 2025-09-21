@@ -61,7 +61,6 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         self._attr_target_temperature_step = 1
         self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
         self._attr_temperature_unit = UnitOfTemperature.CELSIUS
-        self._attr_precision = PRECISION_WHOLE
         self._enable_turn_on_off_backwards_compatibility = False
         self._attr_supported_features = (
             ClimateEntityFeature.TARGET_TEMPERATURE
