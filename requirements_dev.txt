@@ -1,2 +1,2 @@
-homeassistant==2025.9.3
-pymodbus>=3.11.1
+homeassistant==2025.10.4
+pymodbus>=3.11.2
