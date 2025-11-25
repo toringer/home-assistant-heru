@@ -57,7 +57,7 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         self.modbus_address = self.idx["modbus_address"]
 
         self._attr_min_temp = 15
-        self._attr_max_temp = 30
+        self._attr_max_temp = self._get_max_temp()
         self._attr_target_temperature_step = 1
         self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
         self._attr_temperature_unit = UnitOfTemperature.CELSIUS
@@ -105,6 +105,10 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         """Get the value from the coordinator"""
         return self.coordinator.get_register(self.modbus_address)
 
+    def _get_max_temp(self):
+        """Get the max temperature from the coordinator"""
+        return self.coordinator.get_register("4x00048")
+
     def _get_hvac_action(self):
         action = self.coordinator.get_register("3x00029")
         if action == 0:
@@ -125,6 +129,7 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         _LOGGER.debug("HeruThermostat._handle_coordinator_update()")
         self._attr_current_temperature = self._get_current_temperature()
         self._attr_target_temperature = self._get_target_temperature()
+        self._attr_max_temp = self._get_max_temp()
         self._attr_hvac_action = self._get_hvac_action()
         self._attr_hvac_mode = self._get_hvac_mode()
 

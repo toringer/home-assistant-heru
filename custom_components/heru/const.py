@@ -437,6 +437,15 @@ HERU_NUMBERS = [
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
     },
+    {
+        "name": "Setpoint max limit (Comfort)",
+        "modbus_address": "4x00048",
+        "scale": 1,
+        "min_value": 15,
+        "max_value": 40,
+        "icon": ICON_THERMOMETER,
+        "unit_of_measurement": "°C",
+    },
 ]
 
 
