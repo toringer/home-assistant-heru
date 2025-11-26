@@ -74,7 +74,10 @@ class HeruSensor(HeruEntity, SensorEntity):
 
             if self._attr_device_class == SensorDeviceClass.ENUM:
                 return self._attr_options[value]
-            return value * self.idx["scale"]
+            scaled_value = value * self.idx["scale"]
+            if "precision" in self.idx and self.idx["precision"] is not None:
+                return round(scaled_value, self.idx["precision"])
+            return scaled_value
         if self.idx["register_type"] == INPUT_REGISTERS_BINARY:
             if value == 0:
                 return STATE_OFF
