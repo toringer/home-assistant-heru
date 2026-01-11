@@ -39,7 +39,7 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
         """Create the options flow."""
-        return OptionsFlowHandler(config_entry)
+        return OptionsFlowHandler()
 
     async def async_step_user(self, user_input=None):
         _LOGGER.debug("HeruIqcConfigFlow.async_step_user")
@@ -81,22 +81,17 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class OptionsFlowHandler(config_entries.OptionsFlow):
     """Options flow handler"""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
-        self._errors = {}
-
     async def async_step_init(self, user_input) -> FlowResult:
         """Manage the options."""
+        errors: dict[str, str] = {}
 
-        self._errors = {}
         if user_input is not None:
             # process user_input
             error = await FlowValidator.validate_step_user(self.hass, user_input)
             if error is not None:
-                self._errors[error[0]] = error[1]
+                errors[error[0]] = error[1]
 
-            if not self._errors:
+            if not errors:
                 return self.async_create_entry(
                     title=self.config_entry.title, data=user_input
                 )
@@ -113,6 +108,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(user_schema),
-            errors=self._errors,
+            errors=errors,
             last_step=True,
         )
