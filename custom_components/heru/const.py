@@ -117,6 +117,18 @@ HERU_SENSORS = [
         "register_type": INPUT_REGISTERS,
     },
     {
+        "name": "Room temperature",
+        "modbus_address": "3x00008",
+        "scale": 0.1,
+        "icon": ICON_THERMOMETER,
+        "unit_of_measurement": "°C",
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "entity_category": None,
+        "register_type": INPUT_REGISTERS,
+        "entity_registry_enabled_default": False,
+    },
+    {
         "name": "Current exhaust fan power",
         "modbus_address": "3x00026",
         "scale": 1,

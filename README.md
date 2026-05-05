@@ -49,6 +49,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Quality sensor 2[^1]|3x00044|
 |Quality sensor 3[^1]|3x00046|
 |Recycle efficiency|_Calculated_|
+|Room temperature (default disabled)|3x00008|
 |Rotor alarm|1x00011|
 |Setpoint max limit (Comfort)|4x00048|
 |Startup 1st phase|1x00028|

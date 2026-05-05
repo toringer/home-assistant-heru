@@ -60,6 +60,10 @@ class HeruSensor(HeruEntity, SensorEntity):
         self._attr_state_class = self.idx["state_class"]
 
         self._attr_entity_category = self.idx["entity_category"]
+
+        if "entity_registry_enabled_default" in self.idx:
+            self._attr_entity_registry_enabled_default = self.idx["entity_registry_enabled_default"]
+
         self._attr_native_value = self._get_value()
 
     def _get_value(self):
