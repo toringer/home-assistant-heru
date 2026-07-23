@@ -28,10 +28,14 @@ async def async_setup_entry(
     _LOGGER.debug("Heru.fan.py")
     coordinator = hass.data[DOMAIN]["coordinator"]
 
-    fans = []
-    for fan in HERU_FANS:
-        fans.append(HeruFan(coordinator, fan, entry))
-    async_add_devices(fans)
+    fan_control_enabled = entry.data.get(CONF_FAN_CONTROL, False)
+    _LOGGER.debug("Fan control enabled: %s", fan_control_enabled)
+
+    if fan_control_enabled:
+        fans = []
+        for fan in HERU_FANS:
+            fans.append(HeruFan(coordinator, fan, entry))
+        async_add_devices(fans)
 
 class HeruFan(HeruEntity, FanEntity):
     """Representation of a modbus controlled Heru Fan."""

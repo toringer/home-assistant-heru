@@ -6,7 +6,8 @@
                 "data": {
                     "device_name": "Name",
                     "host_name": "Host name or IP address",
-                    "host_port": "Port number"
+                    "host_port": "Port number",
+                    "fan_control": "Enable fan control"
                 }
             }
         },

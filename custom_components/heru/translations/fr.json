@@ -6,7 +6,8 @@
         "data": {
           "device_name": "Nom",
           "host_name": "Nom de domaine ou adresse IP",
-          "host_port": "Numéro de port"
+          "host_port": "Numéro de port",
+          "fan_control": "Activer le contrôle du ventilateur"
         }
       }
     },
