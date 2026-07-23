@@ -102,7 +102,34 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 
 Enable modbus and network on the HERU unit in the service menu using `1991` as pin code.
 
+## Fan Control
 
+When adding a HERU integration entry the `Enable Fan Control` option can be enabled
+to allow control of the supply and exhaust fans using two `fan` entities. Note
+that the `fan` entities are only available when the `Enable Fan Control` option
+is enabled during the creation of the entry.
+
+> [!CAUTION]
+> This is an advanced feature and should only be used by users that understand the
+> implications of controlling the fans directly. The HERU unit has a built-in control
+> system that manages the fan speeds based on the configured setpoints and environmental
+> conditions. Directly controlling the fans can lead to suboptimal performance or
+> even damage to the unit or your home if not done correctly!
+
+There are some quirks when using the fan control that are important to understand:
+1. Setting the fan speed always changes the **standard** fan speed in the HERU unit,
+   even if the HERU unit is in a different mode (e.g., boost, away, night cooling).
+
+2. The fan speed shown is the *actual* fan speed, which is not the same as the standard
+   fan speed if the HERU unit is in a different mode (e.g., boost, away, night cooling).  
+   But changing the standard fan speed will also affect the *supply* fan speed for
+   the different modes (boost, away) since the HERU unit uses the ratio between the
+   standard exhaust and supply fan speeds to determine the supply fan speed in the
+   other modes.
+
+If using the fan control it is recommended to not use the HERU unit's built-in
+modes (boost, away, night cooling) and instead use Home Assistant automations to
+fully control the fan speeds.
 
 [releases-shield]: https://img.shields.io/github/v/release/toringer/home-assistant-heru?style=flat-square
 [releases]: https://github.com/toringer/home-assistant-heru/releases
