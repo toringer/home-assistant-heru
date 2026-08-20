@@ -10,7 +10,7 @@
                     "fan_control": "Enable fan control"
                 },
                 "data_description": {
-                    "fan_control": "⚠️ **WARNING:**\nThe fan control is an advanced feature and should only be used by users that understand them. See [README](https://github.com/toringer/home-assistant-heru/blob/master/README.md) for more information."
+                    "fan_control": "⚠️ **WARNING:**\nThe fan control is an advanced feature and should only be used by users that understand it. See the README for more information."
                 }
             }
         },

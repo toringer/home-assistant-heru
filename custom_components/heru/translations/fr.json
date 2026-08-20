@@ -10,7 +10,7 @@
           "fan_control": "Activer le contrôle du ventilateur"
         },
         "data_description": {
-          "fan_control": "⚠️ **ATTENTION:**\nLe contrôle du ventilateur est une fonctionnalité avancée et ne doit être utilisé que par des utilisateurs qui la comprennent. Voir le [README](https://github.com/toringer/home-assistant-heru/blob/master/README.md) pour plus d'informations."
+          "fan_control": "⚠️ **ATTENTION:**\nLe contrôle du ventilateur est une fonctionnalité avancée et ne doit être utilisé que par des utilisateurs qui la comprennent. Voir le README pour plus d'informations."
         }
       }
     },
