@@ -14,6 +14,7 @@ from .const import (
     CONF_HOST_NAME,
     CONF_HOST_PORT,
     CONF_DEVICE_NAME,
+    CONF_FAN_CONTROL,
     DOMAIN,
 )
 
@@ -67,7 +68,8 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         user_schema = {
             vol.Required(CONF_DEVICE_NAME): cv.string,
             vol.Required(CONF_HOST_NAME): cv.string,
-            vol.Required(CONF_HOST_PORT, default=502): cv.positive_int
+            vol.Required(CONF_HOST_PORT, default=502): cv.positive_int,
+            vol.Required(CONF_FAN_CONTROL, default=False): cv.boolean
         }
 
         return self.async_show_form(

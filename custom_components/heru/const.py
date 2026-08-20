@@ -35,7 +35,8 @@ NUMBER = Platform.NUMBER
 SELECT = Platform.SELECT
 CLIMATE = Platform.CLIMATE
 BINARY_SENSOR = Platform.BINARY_SENSOR
-PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE, NUMBER, BINARY_SENSOR]
+FAN = Platform.FAN
+PLATFORMS = [SENSOR, SWITCH, BUTTON, CLIMATE, NUMBER, BINARY_SENSOR, FAN]
 # PLATFORMS = [SWITCH, SENSOR, BUTTON, NUMBER, SELECT]
 
 # Modbus
@@ -47,6 +48,7 @@ REGISTER_COILS = "coils"
 CONF_HOST_NAME = "host_name"
 CONF_HOST_PORT = "host_port"
 CONF_DEVICE_NAME = "device_name"
+CONF_FAN_CONTROL = "fan_control"
 
 # Modbus register types
 INPUT_REGISTERS = "input_registers"
@@ -544,4 +546,19 @@ HERU_CLIMATES = [
         "modbus_address": "4x00002",
         "icon": ICON_THERMOSTAT,
     }
+]
+
+HERU_FANS = [
+    {
+        "name": "Supply fan",
+        "modbus_address": "4x00003",
+        "modbus_address_get": "3x00025",
+        "icon": ICON_FAN,
+    },
+    {
+        "name": "Exhaust fan",
+        "modbus_address": "4x00004",
+        "modbus_address_get": "3x00026",
+        "icon": ICON_FAN,
+    },
 ]
