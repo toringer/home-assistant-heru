@@ -116,7 +116,15 @@ is enabled during the creation of the entry.
 > conditions. Directly controlling the fans can lead to suboptimal performance or
 > even damage to the unit or your home if not done correctly!
 
+> [!TIP]
+> To add the fan control to an existing HERU integration entry, you can remove the
+> integration and re-add it **using the same name** with the `Enable Fan Control`
+> option enabled.
+
+### Fan Control Quirks
+
 There are some quirks when using the fan control that are important to understand:
+
 1. Setting the fan speed always changes the **standard** fan speed in the HERU unit,
    even if the HERU unit is in a different mode (e.g., boost, away, night cooling).
 
