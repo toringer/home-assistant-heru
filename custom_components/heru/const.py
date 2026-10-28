@@ -1,9 +1,8 @@
 """Constants file"""
 
-from homeassistant.const import Platform
+from homeassistant.const import EntityCategory, Platform
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
-from homeassistant.helpers.entity import EntityCategory
 
 NAME = "HERU"
 DOMAIN = "heru"

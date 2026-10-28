@@ -1,8 +1,9 @@
 """Sensor platform for HERU."""
 import logging
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, EntityCategory, SensorStateClass
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import EntityCategory
 from homeassistant.const import STATE_OFF
 from homeassistant.const import STATE_ON
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
