@@ -31,5 +31,10 @@
     "error": {
       "failed_to_connect": "Impossible de se connecter à l'appareil."
     }
+  },
+  "exceptions": {
+    "write_failed": {
+      "message": "Échec de l'écriture de {address} sur l'appareil HERU : {error}"
+    }
   }
 }

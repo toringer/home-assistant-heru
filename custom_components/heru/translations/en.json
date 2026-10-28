@@ -31,5 +31,10 @@
         "error": {
             "failed_to_connect": "Failed to connect to unit."
         }
+    },
+    "exceptions": {
+        "write_failed": {
+            "message": "Failed to write {address} to the HERU unit: {error}"
+        }
     }
 }

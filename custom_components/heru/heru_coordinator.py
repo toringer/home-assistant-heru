@@ -1,11 +1,14 @@
+from collections.abc import Awaitable
 from datetime import timedelta
 import logging
 import async_timeout
 
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from pymodbus.client import AsyncModbusTcpClient
+from pymodbus.exceptions import ModbusException
 
-from .const import DEFAULT_SLAVE, NAME
+from .const import DEFAULT_SLAVE, DOMAIN, NAME
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,20 +99,45 @@ class HeruCoordinator(DataUpdateCoordinator):
         except Exception as err:
             raise UpdateFailed(f"Error communicating with unit: {err}")
 
-    async def write_register_by_address(self, modbus_address: str, value: int):
+    async def write_register_by_address(self, modbus_address: str, value: int, refresh: bool = True):
         """Write to modbus register by modbus address (e.g., '4x00002')."""
         # Convert modbus_address (e.g., "4x00002") to numeric address (1)
         numeric_addr = int(modbus_address.replace("4x", "")) - 1
-        result = await self.client.write_register(numeric_addr, value, device_id=DEFAULT_SLAVE)
-        await self.async_refresh()
-        return result
+        return await self._write(
+            modbus_address,
+            self.client.write_register(numeric_addr, value, device_id=DEFAULT_SLAVE),
+            refresh,
+        )
 
-    async def write_coil_by_address(self, modbus_address: str, value):
+    async def write_coil_by_address(self, modbus_address: str, value, refresh: bool = True):
         """Write to modbus coil by modbus address (e.g., '0x00001')."""
         # Convert modbus_address (e.g., "0x00001") to numeric address (0)
         numeric_addr = int(modbus_address.replace("0x", "")) - 1
-        result = await self.client.write_coil(numeric_addr, value, device_id=DEFAULT_SLAVE)
-        await self.async_refresh()
+        return await self._write(
+            modbus_address,
+            self.client.write_coil(numeric_addr, value, device_id=DEFAULT_SLAVE),
+            refresh,
+        )
+
+    async def _write(self, modbus_address: str, request: Awaitable, refresh: bool):
+        """Send a write request and raise HomeAssistantError if the unit rejects it."""
+        try:
+            result = await request
+        except ModbusException as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="write_failed",
+                translation_placeholders={"address": modbus_address, "error": str(err)},
+            ) from err
+        if result.isError():
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="write_failed",
+                translation_placeholders={"address": modbus_address, "error": str(result)},
+            )
+        if refresh:
+            # Debounced, so several writes in a row lead to one poll instead of one each
+            await self.async_request_refresh()
         return result
 
     def close(self):

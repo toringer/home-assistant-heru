@@ -152,7 +152,6 @@ class HeruThermostat(HeruEntity, ClimateEntity):
             await self.coordinator.write_coil_by_address("0x00001", True)
         elif hvac_mode == HVACMode.OFF:
             await self.coordinator.write_coil_by_address("0x00001", False)
-        await self.coordinator.async_request_refresh()
 
     async def async_turn_on(self):
         """Turn the entity on."""
