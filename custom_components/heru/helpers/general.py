@@ -16,3 +16,8 @@ def get_parameter(config_entry: ConfigEntry, parameter: str, default_val: Any = 
     if parameter in config_entry.data.keys():
         return config_entry.data.get(parameter)
     return default_val
+
+
+def unique_id_prefix(host_name: str) -> str:
+    """Return the host part of the entity unique ids."""
+    return host_name.replace(".", "")
