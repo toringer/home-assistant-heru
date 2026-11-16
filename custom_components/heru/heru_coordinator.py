@@ -1,7 +1,7 @@
+import asyncio
 from collections.abc import Awaitable
 from datetime import timedelta
 import logging
-import async_timeout
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.exceptions import HomeAssistantError
@@ -18,10 +18,6 @@ class HeruCoordinator(DataUpdateCoordinator):
     """HERU coordinator."""
 
     paused = False
-    _input_registers = {}
-    _holding_registers = {}
-    _discrete_inputs = {}
-    _coils = {}
 
     def __init__(self, hass, client: AsyncModbusTcpClient, config_entry: ConfigEntry):
         """Initialize my coordinator."""
@@ -35,6 +31,10 @@ class HeruCoordinator(DataUpdateCoordinator):
             update_interval=timedelta(seconds=15),
         )
         self.client = client
+        self._input_registers = {}
+        self._holding_registers = {}
+        self._discrete_inputs = {}
+        self._coils = {}
 
     def get_register(self, modbus_address: str):
         """Get register value by modbus address, automatically determining register type from prefix."""
@@ -55,7 +55,7 @@ class HeruCoordinator(DataUpdateCoordinator):
         try:
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 if self.client.connected is False:
                     await self.client.connect()
 
