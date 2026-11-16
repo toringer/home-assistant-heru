@@ -3,6 +3,7 @@ from datetime import timedelta
 import logging
 import async_timeout
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from pymodbus.client import AsyncModbusTcpClient
@@ -22,11 +23,12 @@ class HeruCoordinator(DataUpdateCoordinator):
     _discrete_inputs = {}
     _coils = {}
 
-    def __init__(self, hass, client: AsyncModbusTcpClient):
+    def __init__(self, hass, client: AsyncModbusTcpClient, config_entry: ConfigEntry):
         """Initialize my coordinator."""
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             # Name of the data. For logging purposes.
             name=NAME,
             # Polling interval. Will only be polled if there are subscribers.
