@@ -39,7 +39,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     if DOMAIN not in hass.data:
         hass.data[DOMAIN] = {}
 
-    coordinator = HeruCoordinator(hass, client)
+    coordinator = HeruCoordinator(hass, client, entry)
     await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN]["coordinator"] = coordinator
@@ -73,5 +73,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload config entry."""
     _LOGGER.debug("async_reload_entry")
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
+    await hass.config_entries.async_reload(entry.entry_id)
