@@ -48,6 +48,17 @@ class HeruThermostat(HeruEntity, ClimateEntity):
 
     # https://developers.home-assistant.io/docs/core/entity/climate/
 
+    if not hasattr(ClimateEntity, "native_current_temperature"):
+        # Home Assistant before 2026.11 only reads the old, un-prefixed names.
+        # Remove this block when the minimum version in hacs.json is 2026.11.
+        temperature_unit = UnitOfTemperature.CELSIUS
+        current_temperature = property(
+            lambda self: self._attr_native_current_temperature
+        )
+        target_temperature = property(
+            lambda self: self._attr_native_target_temperature
+        )
+
     def __init__(self, coordinator: CoordinatorEntity, idx, config_entry) -> None:
         """Initialize the modbus thermostat."""
         _LOGGER.debug("HeruSensor.__init__()")
@@ -60,7 +71,7 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         self._attr_max_temp = self._get_max_temp()
         self._attr_target_temperature_step = 1
         self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
-        self._attr_temperature_unit = UnitOfTemperature.CELSIUS
+        self._attr_native_temperature_unit = UnitOfTemperature.CELSIUS
         self._enable_turn_on_off_backwards_compatibility = False
         self._attr_supported_features = (
             ClimateEntityFeature.TARGET_TEMPERATURE
@@ -69,8 +80,8 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         )
 
         self._attr_hvac_mode = self._get_hvac_mode()
-        self._attr_current_temperature = self._get_current_temperature()
-        self._attr_target_temperature = self._get_target_temperature()
+        self._attr_native_current_temperature = self._get_current_temperature()
+        self._attr_native_target_temperature = self._get_target_temperature()
         self._attr_hvac_action = self._get_hvac_action()
 
     def _get_current_temperature(self):
@@ -127,8 +138,8 @@ class HeruThermostat(HeruEntity, ClimateEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("HeruThermostat._handle_coordinator_update()")
-        self._attr_current_temperature = self._get_current_temperature()
-        self._attr_target_temperature = self._get_target_temperature()
+        self._attr_native_current_temperature = self._get_current_temperature()
+        self._attr_native_target_temperature = self._get_target_temperature()
         self._attr_max_temp = self._get_max_temp()
         self._attr_hvac_action = self._get_hvac_action()
         self._attr_hvac_mode = self._get_hvac_mode()
@@ -136,8 +147,8 @@ class HeruThermostat(HeruEntity, ClimateEntity):
         _LOGGER.debug(
             "%s: %f %f",
             self._attr_name,
-            self._attr_current_temperature,
-            self._attr_target_temperature,
+            self._attr_native_current_temperature,
+            self._attr_native_target_temperature,
         )
         self.async_write_ha_state()
 
