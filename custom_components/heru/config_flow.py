@@ -2,13 +2,14 @@
 import logging
 from typing import Any, Optional
 from custom_components.heru.helpers.config_flow import FlowValidator
-from custom_components.heru.helpers.general import get_parameter
+from custom_components.heru.helpers.general import get_parameter, unique_id_prefix
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers import entity_registry as er
 
 from .const import (
     CONF_HOST_NAME,
@@ -80,6 +81,38 @@ class HeruIqcConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
 
+@callback
+def async_migrate_unique_ids(
+    hass: HomeAssistant,
+    config_entry: config_entries.ConfigEntry,
+    old_host_name: str,
+    new_host_name: str,
+) -> None:
+    """Move the entities of a config entry to the unique ids of a new host.
+
+    The unique ids contain the host, so without this a host change would
+    register every entity a second time and orphan the existing ones.
+    """
+    old_prefix = f"{unique_id_prefix(old_host_name)}_"
+    new_prefix = f"{unique_id_prefix(new_host_name)}_"
+    if old_prefix == new_prefix:
+        return
+
+    registry = er.async_get(hass)
+    for entity in er.async_entries_for_config_entry(registry, config_entry.entry_id):
+        if not entity.unique_id.startswith(old_prefix):
+            continue
+        new_unique_id = new_prefix + entity.unique_id[len(old_prefix) :]
+        if registry.async_get_entity_id(entity.domain, entity.platform, new_unique_id):
+            _LOGGER.warning(
+                "Not migrating %s, unique id %s is already in use",
+                entity.entity_id,
+                new_unique_id,
+            )
+            continue
+        registry.async_update_entity(entity.entity_id, new_unique_id=new_unique_id)
+
+
 class OptionsFlowHandler(config_entries.OptionsFlow):
     """Options flow handler"""
 
@@ -94,6 +127,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 errors[error[0]] = error[1]
 
             if not errors:
+                async_migrate_unique_ids(
+                    self.hass,
+                    self.config_entry,
+                    get_parameter(self.config_entry, CONF_HOST_NAME),
+                    user_input[CONF_HOST_NAME],
+                )
                 return self.async_create_entry(
                     title=self.config_entry.title, data=user_input
                 )
