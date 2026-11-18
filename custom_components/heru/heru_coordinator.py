@@ -9,7 +9,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
 
-from .const import DEFAULT_SLAVE, DOMAIN, NAME
+from .const import CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL, DEFAULT_SLAVE, DOMAIN, NAME
+from .helpers.general import get_parameter
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,7 +29,9 @@ class HeruCoordinator(DataUpdateCoordinator):
             # Name of the data. For logging purposes.
             name=NAME,
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=15),
+            update_interval=timedelta(
+                seconds=int(get_parameter(config_entry, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL))
+            ),
         )
         self.client = client
         self._input_registers = {}

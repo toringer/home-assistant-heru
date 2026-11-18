@@ -48,6 +48,10 @@ CONF_HOST_NAME = "host_name"
 CONF_HOST_PORT = "host_port"
 CONF_DEVICE_NAME = "device_name"
 CONF_FAN_CONTROL = "fan_control"
+CONF_SCAN_INTERVAL = "scan_interval"
+DEFAULT_SCAN_INTERVAL = 15  # seconds
+MIN_SCAN_INTERVAL = 5
+MAX_SCAN_INTERVAL = 3600
 
 # Modbus register types
 INPUT_REGISTERS = "input_registers"

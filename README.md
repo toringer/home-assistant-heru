@@ -102,6 +102,13 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 
 Enable modbus and network on the HERU unit in the service menu using `1991` as pin code.
 
+## Poll interval
+
+By default the unit is read every 15 seconds. To change this, go to the HERU entry
+under Settings -> Devices & Services and click **Configure**. Allowed values are 5 to 3600 seconds.
+A longer interval means less Modbus traffic and fewer state changes in the recorder,
+but slower updates.
+
 ## Fan Control
 
 When adding a HERU integration entry the `Enable Fan Control` option can be enabled
