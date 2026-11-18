@@ -16,7 +16,11 @@ from .const import (
     CONF_HOST_PORT,
     CONF_DEVICE_NAME,
     CONF_FAN_CONTROL,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    MAX_SCAN_INTERVAL,
+    MIN_SCAN_INTERVAL,
 )
 
 
@@ -144,6 +148,15 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             vol.Required(
                 CONF_HOST_PORT, default=get_parameter(self.config_entry, CONF_HOST_PORT)
             ): cv.positive_int,
+            vol.Required(
+                CONF_SCAN_INTERVAL,
+                default=get_parameter(
+                    self.config_entry, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                ),
+            ): vol.All(
+                vol.Coerce(int),
+                vol.Range(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL),
+            ),
         }
 
         return self.async_show_form(

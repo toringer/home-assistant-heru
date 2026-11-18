@@ -24,7 +24,11 @@
         "description": "Configuration de l'appareil.",
         "data": {
           "host_name": "Nom de domaine ou adresse IP",
-          "host_port": "Numéro de port"
+          "host_port": "Numéro de port",
+          "scan_interval": "Intervalle d'interrogation (secondes)"
+        },
+        "data_description": {
+          "scan_interval": "Fréquence de lecture de l'appareil. Par défaut 15. Un intervalle plus long réduit le trafic Modbus et les entrées de l'historique, mais les mises à jour sont plus lentes."
         }
       }
     },

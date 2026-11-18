@@ -24,7 +24,11 @@
                 "description": "Configuration of unit.",
                 "data": {
                     "host_name": "Host name or IP address",
-                    "host_port": "Port number"
+                    "host_port": "Port number",
+                    "scan_interval": "Poll interval (seconds)"
+                },
+                "data_description": {
+                    "scan_interval": "How often the unit is read. Default 15. A longer interval means less Modbus traffic and fewer recorder rows, but slower updates."
                 }
             }
         },
