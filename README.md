@@ -16,7 +16,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 </p>
 
 
-*__Note__: The integration requires HERU firmware version 1.09i or newer. Version 1.09i introduced one decimal to temperature sensors, and therefore needs to be scaled. The integration has been verified with HERU firmware version 1.14.*
+*__Note__: The integration requires HERU firmware version 1.09i or newer. Version 1.09i introduced one decimal to temperature sensors, and therefore needs to be scaled. The integration has been verified with HERU firmware version 1.18
 
 ### Sensors
 | Sensor  | Modbus register |
