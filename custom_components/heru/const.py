@@ -443,8 +443,9 @@ HERU_NUMBERS = [
         "name": "Night cooling exhaust high limit",
         "modbus_address": "4x00021",
         "scale": 1,
-        "min_value": 18,
-        "max_value": 24,
+        # The IQC register map says 18-24, but the unit accepts 15-40.
+        "min_value": 15,
+        "max_value": 40,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
     },
@@ -452,8 +453,9 @@ HERU_NUMBERS = [
         "name": "Night cooling exhaust low limit",
         "modbus_address": "4x00022",
         "scale": 1,
-        "min_value": 19,
-        "max_value": 26,
+        # The IQC register map says 19-26, but the unit accepts 15-35.
+        "min_value": 15,
+        "max_value": 35,
         "icon": ICON_THERMOMETER,
         "unit_of_measurement": "°C",
     },
