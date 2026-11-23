@@ -18,6 +18,7 @@ from .const import (
     DISCRETE_INPUTS,
     DOMAIN,
     HERU_SENSORS,
+    ICON_EXCHANGE,
     HOLDING_REGISTERS,
     INPUT_REGISTERS,
     INPUT_REGISTERS_BINARY,
@@ -39,6 +40,7 @@ async def async_setup_entry(
         sensors.append(HeruSensor(coordinator, sensor, entry))
     sensors.append(HeruLastSeenSensor(coordinator, entry))
     sensors.append(HeruRecycleEfficiencySensor(coordinator, entry))
+    sensors.append(HeruRecoveryModeSensor(coordinator, entry))
     sensors.append(HeruQualitySensor(coordinator, "Quality sensor 1", "3x00041", "3x00042", entry))
     sensors.append(HeruQualitySensor(coordinator, "Quality sensor 2", "3x00043", "3x00044", entry))
     sensors.append(HeruQualitySensor(coordinator, "Quality sensor 3", "3x00045", "3x00046", entry))
@@ -192,4 +194,59 @@ class HeruRecycleEfficiencySensor(HeruEntity, SensorEntity):
             self._attr_native_value,
             self._attr_native_unit_of_measurement,
         )
+        self.async_write_ha_state()
+
+
+class HeruRecoveryModeSensor(HeruEntity, SensorEntity):
+    """Direction of the rotor's recovery: heat, cold or off.
+
+    Since firmware 1.10, 3x00030 is in the range -255..255: positive for heat
+    recovery, negative for cold recovery.
+    """
+
+    MODE_OFF = "Off"
+    MODE_HEAT = "Heat"
+    MODE_COLD = "Cold"
+    ICONS = {
+        MODE_OFF: "mdi:fan-off",
+        MODE_HEAT: "mdi:sun-thermometer",
+        MODE_COLD: "mdi:snowflake-thermometer",
+    }
+
+    def __init__(self, coordinator: CoordinatorEntity, config_entry):
+        _LOGGER.debug("HeruRecoveryModeSensor.__init__()")
+        idx = {
+            "name": "Recovery mode",
+            "icon": ICON_EXCHANGE,
+            "modbus_address": "recovery_mode",
+        }
+        super().__init__(coordinator, idx, config_entry)
+        self.coordinator = coordinator
+        self.idx = idx
+        self._attr_device_class = SensorDeviceClass.ENUM
+        self._attr_options = [self.MODE_OFF, self.MODE_HEAT, self.MODE_COLD]
+        self._update_value()
+
+    def _update_value(self):
+        """Set the mode and icon from the sign of the recovery power."""
+        raw = self.coordinator.get_register("3x00030")
+        if raw is None:
+            self._attr_native_value = None
+            self._attr_icon = ICON_EXCHANGE
+            return
+        power = ModbusClientMixin.convert_from_registers([raw], ModbusClientMixin.DATATYPE.INT16)
+        if power > 0:
+            mode = self.MODE_HEAT
+        elif power < 0:
+            mode = self.MODE_COLD
+        else:
+            mode = self.MODE_OFF
+        self._attr_native_value = mode
+        self._attr_icon = self.ICONS[mode]
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        _LOGGER.debug("HeruRecoveryModeSensor._handle_coordinator_update()")
+        self._update_value()
         self.async_write_ha_state()
