@@ -29,7 +29,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Current exhaust fan speed|3x00028|
 |Current exhaust fan step|3x00024|
 |Current heating power|3x00029|
-|Current heat/cold recovery power|3x00030|
+|Current heat/cold recovery power[^2]|3x00030|
 |Current supply fan control voltage|3x00032|
 |Current supply fan power|3x00025|
 |Current supply fan speed|3x00027|
@@ -48,6 +48,7 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Quality sensor 1[^1]|3x00042|
 |Quality sensor 2[^1]|3x00044|
 |Quality sensor 3[^1]|3x00046|
+|Recovery mode (Off, Heat, Cold)[^2]|_Calculated_ (3x00030)|
 |Recycle efficiency|_Calculated_|
 |Room temperature (default disabled)|3x00008|
 |Rotor alarm|1x00011|
@@ -59,6 +60,8 @@ Control and monitor your Östberg HERU energy recovery unit from Home Assistant 
 |Temperature regulation mode|4x00012|
 
 [^1]: When a physical quality sensors is installed in the HERU, the Home Assistant component must be reloaded to allow the sensors unit of measurements to be reset.
+
+[^2]: Since HERU firmware 1.10, the recovery power is in the range -100 to 100 %: positive during heat recovery and negative during cold recovery (the IQC display shows a blue fan symbol). *Recovery mode* shows the direction.
 
 ### Buttons
 | Button  | Modbus register |
